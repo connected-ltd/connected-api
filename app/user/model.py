@@ -11,9 +11,12 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, unique=True, nullable=False)
     password = db.Column(db.String, nullable=False)
+    address = db.Column(db.String, nullable=False)
+    description = db.Column(db.String, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=db.func.now())
     updated_at = db.Column(db.DateTime, nullable=False, default=db.func.now())
     role = db.Column(db.String, nullable=True)
+    
     
     def save(self):
         db.session.add(self)
@@ -65,8 +68,8 @@ class User(db.Model):
         return User.query.filter(User.username==username).first()
     
     @classmethod
-    def create(cls, username, password, role):
-        user = cls(username=username, password=password, role=role)
+    def create(cls, username, password, address, description, role):
+        user = cls(username=username, password=password, address=address, description=description, role=role)
         user.hash_password()
         user.save()
         return user
