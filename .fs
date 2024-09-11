@@ -554,6 +554,72 @@
                 }
             ],
             "timestamp": "2024-09-10 00:45:44"
+        },
+        {
+            "name": "africastalking",
+            "version": "1.2.8",
+            "dependencies": [
+                {
+                    "name": "requests"
+                },
+                {
+                    "name": "schema"
+                }
+            ],
+            "timestamp": "2024-09-11 23:42:40"
+        },
+        {
+            "name": "langchain",
+            "version": "0.2.16",
+            "dependencies": [
+                {
+                    "name": "aiohttp"
+                },
+                {
+                    "name": "langchain-core"
+                },
+                {
+                    "name": "langchain-text-splitters"
+                },
+                {
+                    "name": "langsmith"
+                },
+                {
+                    "name": "numpy"
+                },
+                {
+                    "name": "pydantic"
+                },
+                {
+                    "name": "PyYAML"
+                },
+                {
+                    "name": "requests"
+                },
+                {
+                    "name": "SQLAlchemy"
+                },
+                {
+                    "name": "tenacity"
+                }
+            ],
+            "timestamp": "2024-09-11 23:43:49"
+        },
+        {
+            "name": "langchain-openai",
+            "version": "0.1.23",
+            "dependencies": [
+                {
+                    "name": "langchain-core"
+                },
+                {
+                    "name": "openai"
+                },
+                {
+                    "name": "tiktoken"
+                }
+            ],
+            "timestamp": "2024-09-11 23:59:21"
         }
     ],
     "modules": [
