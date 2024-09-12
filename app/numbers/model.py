@@ -30,6 +30,18 @@ class Numbers(db.Model):
         return cls.query.filter_by(id=id, is_deleted=False).first()
     
     @classmethod
+    def get_all_number_only(cls):
+        return cls.query.with_entities(cls.number).filter_by(is_deleted=False).all()
+    
+    @classmethod
+    def get_all_by_area_id(cls, area_id):
+        return cls.query.filter_by(area_id=area_id, is_deleted=False).all()
+    
+    @classmethod
+    def get_all_numbers_only_by_area_id(cls, area_id):
+        return cls.query.with_entities(cls.number).filter_by(area_id=area_id, is_deleted=False).all()
+    
+    @classmethod
     def get_all(cls):
         return cls.query.filter_by(is_deleted=False).all()
     

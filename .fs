@@ -620,6 +620,19 @@
                 }
             ],
             "timestamp": "2024-09-11 23:59:21"
+        },
+        {
+            "name": "africastalking",
+            "version": "1.2.8",
+            "dependencies": [
+                {
+                    "name": "requests"
+                },
+                {
+                    "name": "schema"
+                }
+            ],
+            "timestamp": "2024-09-12 21:58:46"
         }
     ],
     "modules": [

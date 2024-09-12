@@ -14,7 +14,7 @@ def create_areas():
     return {'data':AreasSchema().dump(areas), 'message': 'Areas created successfully', 'status':'success'}, 201
 
 @bp.get('/areas/<int:id>')
-@auth_required('executive')
+@auth_required()
 def get_areas(id):
     areas = Areas.get_by_id(id)
     if areas is None:
@@ -32,7 +32,7 @@ def update_areas(id):
     return {'data':AreasSchema().dump(areas), 'message': 'Areas updated successfully', 'status':'success'}, 200
 
 @bp.patch('/areas/<int:id>')
-@auth_required('executive')
+@auth_required()
 def patch_areas(id):
     areas = Areas.get_by_id(id)
     if areas is None:
@@ -51,7 +51,7 @@ def delete_areas(id):
     return {'message': 'Areas deleted successfully', 'status':'success'}, 200
 
 @bp.get('/areas')
-@auth_required('executive')
+@auth_required()
 def get_all_areas():
     areass = Areas.get_all()
     return {'data':AreasSchema(many=True).dump(areass), 'message': 'Areas fetched successfully', 'status':'success'}, 200

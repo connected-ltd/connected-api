@@ -28,6 +28,10 @@ class Shortcodes(db.Model):
         return cls.query.filter_by(id=id, is_deleted=False).first()
     
     @classmethod
+    def get_shortcode_only_by_id(cls, id):
+        return cls.query.with_entities(cls.shortcode).filter_by(id=id, is_deleted=False).first()
+    
+    @classmethod
     def get_all(cls):
         return cls.query.filter_by(is_deleted=False).all()
     

@@ -11,9 +11,7 @@ class AfricasTalking:
     def send(self, sender, message, recipients):
         try:
             response = self.sms.send(message, recipients, sender)
-            print(response)
-            print(f"message sent to {recipients}")
-            return {"message":"Message sent to recipients successfully"}, 201
+            return response
         except Exception as e:
             print(f"Houston, we have a problem: {e}")
             return {"message":"Message failed to send"}, 500
