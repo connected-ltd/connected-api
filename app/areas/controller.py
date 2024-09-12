@@ -7,14 +7,14 @@ from app.areas.schema import *
 bp = Blueprint('areas', __name__)
 
 @bp.post('/areas')
-@auth_required()
+@auth_required('executive')
 def create_areas():
     name = request.json.get('name')
     areas = Areas.create(name)
     return {'data':AreasSchema().dump(areas), 'message': 'Areas created successfully', 'status':'success'}, 201
 
 @bp.get('/areas/<int:id>')
-@auth_required()
+@auth_required('executive')
 def get_areas(id):
     areas = Areas.get_by_id(id)
     if areas is None:
@@ -22,7 +22,7 @@ def get_areas(id):
     return {'data':AreasSchema().dump(areas), 'message': 'Areas fetched successfully', 'status':'success'}, 200
 
 @bp.put('/areas/<int:id>')
-@auth_required()
+@auth_required('executive')
 def update_areas(id):
     areas = Areas.get_by_id(id)
     if areas is None:
@@ -32,7 +32,7 @@ def update_areas(id):
     return {'data':AreasSchema().dump(areas), 'message': 'Areas updated successfully', 'status':'success'}, 200
 
 @bp.patch('/areas/<int:id>')
-@auth_required()
+@auth_required('executive')
 def patch_areas(id):
     areas = Areas.get_by_id(id)
     if areas is None:
@@ -42,7 +42,7 @@ def patch_areas(id):
     return {'data':AreasSchema().dump(areas), 'message': 'Areas updated successfully', 'status':'success'}, 200
 
 @bp.delete('/areas/<int:id>')
-@auth_required()
+@auth_required('executive')
 def delete_areas(id):
     areas = Areas.get_by_id(id)
     if areas is None:
@@ -51,7 +51,7 @@ def delete_areas(id):
     return {'message': 'Areas deleted successfully', 'status':'success'}, 200
 
 @bp.get('/areas')
-@auth_required()
+@auth_required('executive')
 def get_all_areas():
     areass = Areas.get_all()
     return {'data':AreasSchema(many=True).dump(areass), 'message': 'Areas fetched successfully', 'status':'success'}, 200
