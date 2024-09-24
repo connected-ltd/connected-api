@@ -2,8 +2,8 @@ from app import db
 
 class Files(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, nullable=False)
-    weaviate_class = db.Column(db.String, nullable=False)
+    name = db.Column(db.String, unique=True, nullable=False)
+    weaviate_class = db.Column(db.String, unique=True, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=db.func.now())
     updated_at = db.Column(db.DateTime, default=db.func.now())
@@ -28,6 +28,10 @@ class Files(db.Model):
     @classmethod
     def get_by_id(cls, id):
         return cls.query.filter_by(id=id, is_deleted=False).first()
+    
+    @classmethod
+    def get_id_by_name(cls, name):
+        return cls.query.filter_by(name=name, is_deleted=False).with_entities(cls.id).first()
     
     @classmethod
     def get_all(cls):

@@ -3,17 +3,57 @@ from app.route_guard import auth_required
 
 from app.files.model import *
 from app.files.schema import *
+from app.user.model import *
+from app.user.schema import *
+from app.shortcodes.model import *
+from app.shortcode_files.model import *
+from helpers.weaviate import wv_client, wv_delete_doc
+from helpers.process_upload_file import process_uploaded_file
 
 bp = Blueprint('files', __name__)
 
 @bp.post('/files')
 @auth_required()
 def create_files():
-    name = request.json.get('name')
-    user_id = request.json.get('user_id')
-    weaviate_class = request.json.get('weaviate_class')
-    files = Files.create(name, user_id, weaviate_class)
-    return {'data':FilesSchema().dump(files), 'message': 'Files created successfully', 'status':'success'}, 201
+    file = request.files.get('file')
+    user_id = request.form.get('user_id')
+    shortcode = request.form.get('shortcode')
+    username = User.get_username_by_id(user_id)
+    user_classname = username.split('@')[0].replace('-', '_').replace('.', '_').replace(',', '_')
+    if file:
+        if not (file.filename.lower().endswith('.pdf') or file.filename.lower().endswith('.docx')):
+            return {'message':'Only PDf and DOCX files are allowed'}, 400
+        
+        wv_class_name = f"{user_classname}_{file.filename.split('.')[0]}".replace(" ", "").replace("-", "")
+        
+        result, status_code = process_uploaded_file(file, wv_client, wv_class_name)  # Unpack the tuple
+
+        if result['status'] == "exists":
+            return result, status_code
+        elif result['status'] == "error":
+            return result, status_code
+        
+        try:     
+            # TODO: Handle when file already exists
+            added_file = Files.create(file.filename, user_id, wv_class_name)
+            
+            if added_file:    
+                # TODO: Handle when shortcode already exists
+                added_shortcode = Shortcodes.create(shortcode, user_id) 
+                if added_shortcode:
+                    file_id = added_file.id
+                    Shortcode_Files.create(added_shortcode.id, file_id)
+                    
+        except:
+            wv_delete_doc(wv_client, wv_class_name, file.filename)
+            return {'message': 'Error uploading file', 'status': 'error'}, 500
+        finally:
+            wv_client.close()
+        
+        wv_client.close()        
+        return {'data':FilesSchema().dump(file), 'message': 'Files created successfully', 'status':'success'}, 201
+    else:
+        return {'message':'No file was provided'}, 500
 
 @bp.get('/files/<int:id>')
 @auth_required()

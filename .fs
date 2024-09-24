@@ -633,6 +633,56 @@
                 }
             ],
             "timestamp": "2024-09-12 21:58:46"
+        },
+        {
+            "name": "weaviate-client",
+            "version": "4.8.1",
+            "dependencies": [
+                {
+                    "name": "authlib"
+                },
+                {
+                    "name": "grpcio"
+                },
+                {
+                    "name": "grpcio-health-checking"
+                },
+                {
+                    "name": "grpcio-tools"
+                },
+                {
+                    "name": "httpx"
+                },
+                {
+                    "name": "pydantic"
+                },
+                {
+                    "name": "requests"
+                },
+                {
+                    "name": "validators"
+                }
+            ],
+            "timestamp": "2024-09-15 10:58:23"
+        },
+        {
+            "name": "pypdf",
+            "version": "5.0.0",
+            "dependencies": [],
+            "timestamp": "2024-09-21 21:22:48"
+        },
+        {
+            "name": "python-docx",
+            "version": "1.1.2",
+            "dependencies": [
+                {
+                    "name": "lxml"
+                },
+                {
+                    "name": "typing-extensions"
+                }
+            ],
+            "timestamp": "2024-09-22 14:20:04"
         }
     ],
     "modules": [
