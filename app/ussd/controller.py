@@ -87,7 +87,6 @@ def list_areas(page, **kwargs):
         response += "0. Previous page\n"
     response += "10. Go back"
 
-    # Store the current page in the 'previous' field along with the previous stage
     Ussd.create_or_update(kwargs['session_id'], 'process_area_selection', previous=f'update_user_area,{page}')
     return response
 
@@ -95,7 +94,6 @@ def process_area_selection(**kwargs):
     selection = kwargs['selection'].split('*')[-1]
     session = Ussd.get_by_session_id(kwargs['session_id'])
     
-    # Extract the current page from the 'previous' field
     previous_parts = session.previous.split(',')
     current_page = int(previous_parts[1]) if len(previous_parts) > 1 else 1
 
