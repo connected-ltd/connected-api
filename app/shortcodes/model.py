@@ -1,4 +1,6 @@
 from app import db
+from app.files.model import *
+from app.shortcode_files.model import *
 
 class Shortcodes(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -30,6 +32,30 @@ class Shortcodes(db.Model):
     @classmethod
     def get_shortcode_only_by_id(cls, id):
         return cls.query.with_entities(cls.shortcode).filter_by(id=id, is_deleted=False).first()
+    
+    @classmethod
+    def get_files_by_shortcode(cls, shortcode):
+        return db.session.query(cls, Shortcode_Files, Files).\
+            join(Shortcode_Files, cls.id == Shortcode_Files.shortcode_id).\
+            join(Files, Shortcode_Files.file_id == Files.id).\
+            filter(cls.shortcode == shortcode,
+                   cls.is_deleted == False,
+                   Shortcode_Files.is_deleted == False,
+                   Files.is_deleted == False).\
+            all()
+    
+    @classmethod
+    def get_weaviate_class_by_shortcode(cls, shortcode):
+        result = db.session.query(Files.weaviate_class).\
+            join(Shortcode_Files, Files.id == Shortcode_Files.file_id).\
+            join(cls, Shortcode_Files.shortcode_id == cls.id).\
+            filter(cls.shortcode == shortcode,
+                   cls.is_deleted == False,
+                   Shortcode_Files.is_deleted == False,
+                   Files.is_deleted == False).\
+            first()
+
+        return result[0] if result else None
     
     @classmethod
     def get_all(cls):

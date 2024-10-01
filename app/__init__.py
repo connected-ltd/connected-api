@@ -38,6 +38,8 @@ from app.numbers.controller import bp as numbers_bp
 app.register_blueprint(numbers_bp)
 from app.areas.controller import bp as areas_bp
 app.register_blueprint(areas_bp)
+from app.ussd.controller import bp as ussd_bp
+app.register_blueprint(ussd_bp)
 
 # Error handlers
 from .error_handlers import *

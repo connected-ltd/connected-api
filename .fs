@@ -717,6 +717,24 @@
                 }
             ],
             "timestamp": "2024-09-10 19:07:14"
+        },
+        {
+            "name": "ussd",
+            "fields": [
+                {
+                    "name": "session_id",
+                    "type": "str"
+                },
+                {
+                    "name": "stage",
+                    "type": "str"
+                },
+                {
+                    "name": "previous",
+                    "type": "str"
+                }
+            ],
+            "timestamp": "2024-09-30 08:37:52"
         }
     ]
 }

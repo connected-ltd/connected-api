@@ -15,7 +15,6 @@ def check_if_file_exists(wv_client, wv_class_name, filename):
     # Check if object with the UUID exists
     file = wv_client.collections.get("filename")
     file_exists = file.data.exists(object_uuid)
-    print("file exists: ", file_exists)
     # objects = wv_client.data.exists(object_uuid)
     return file_exists
      
@@ -27,6 +26,7 @@ def process_uploaded_file(file, wv_client, wv_class_name):
     try:
         # Check if file already exists in Weaviate
         file_exists = check_if_file_exists(wv_client, wv_class_name, file.filename)
+        print("File exists", file_exists)
         if file_exists:
             return {"message": f"File {file.filename} already exists in Weaviate", "status": "exists"}
         

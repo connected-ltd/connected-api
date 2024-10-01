@@ -66,7 +66,6 @@ class User(db.Model):
     @classmethod
     def get_username_by_id(self, id):
         return User.query.filter(User.id==id).with_entities(User.username).first()[0]
-
     
     @classmethod
     def get_by_username(self, username):
