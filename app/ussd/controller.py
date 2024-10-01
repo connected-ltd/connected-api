@@ -28,7 +28,7 @@ def listen_to_ussd():
 def start(**kwargs):
     number = kwargs['number']
     if number.area_id is None:
-        return update_user_area(**kwargs)  # Force area selection if not set
+        return update_user_area(**kwargs)  # Force area selection if not set before doing anything else
     if number.is_set:
         Ussd.create_or_update(kwargs['session_id'], 'select_service', previous='start')
         response = f"CON Welcome back. What do you want to do today?\n"
