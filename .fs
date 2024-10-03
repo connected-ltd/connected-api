@@ -569,59 +569,6 @@
             "timestamp": "2024-09-11 23:42:40"
         },
         {
-            "name": "langchain",
-            "version": "0.2.16",
-            "dependencies": [
-                {
-                    "name": "aiohttp"
-                },
-                {
-                    "name": "langchain-core"
-                },
-                {
-                    "name": "langchain-text-splitters"
-                },
-                {
-                    "name": "langsmith"
-                },
-                {
-                    "name": "numpy"
-                },
-                {
-                    "name": "pydantic"
-                },
-                {
-                    "name": "PyYAML"
-                },
-                {
-                    "name": "requests"
-                },
-                {
-                    "name": "SQLAlchemy"
-                },
-                {
-                    "name": "tenacity"
-                }
-            ],
-            "timestamp": "2024-09-11 23:43:49"
-        },
-        {
-            "name": "langchain-openai",
-            "version": "0.1.23",
-            "dependencies": [
-                {
-                    "name": "langchain-core"
-                },
-                {
-                    "name": "openai"
-                },
-                {
-                    "name": "tiktoken"
-                }
-            ],
-            "timestamp": "2024-09-11 23:59:21"
-        },
-        {
             "name": "africastalking",
             "version": "1.2.8",
             "dependencies": [
@@ -685,20 +632,26 @@
             "timestamp": "2024-09-22 14:20:04"
         },
         {
-            "name": "pinecone",
-            "version": "5.3.1",
+            "name": "pinecone-client",
+            "version": "2.2.4",
             "dependencies": [
                 {
-                    "name": "certifi"
+                    "name": "dnspython"
                 },
                 {
-                    "name": "pinecone-plugin-inference"
+                    "name": "loguru"
                 },
                 {
-                    "name": "pinecone-plugin-interface"
+                    "name": "numpy"
                 },
                 {
                     "name": "python-dateutil"
+                },
+                {
+                    "name": "pyyaml"
+                },
+                {
+                    "name": "requests"
                 },
                 {
                     "name": "tqdm"
@@ -710,7 +663,113 @@
                     "name": "urllib3"
                 }
             ],
-            "timestamp": "2024-10-03 14:46:54"
+            "timestamp": "2024-10-03 15:19:51"
+        },
+        {
+            "name": "langchain",
+            "version": "0.0.292",
+            "dependencies": [
+                {
+                    "name": "aiohttp"
+                },
+                {
+                    "name": "async-timeout"
+                },
+                {
+                    "name": "dataclasses-json"
+                },
+                {
+                    "name": "langsmith"
+                },
+                {
+                    "name": "numexpr"
+                },
+                {
+                    "name": "numpy"
+                },
+                {
+                    "name": "pydantic"
+                },
+                {
+                    "name": "PyYAML"
+                },
+                {
+                    "name": "requests"
+                },
+                {
+                    "name": "SQLAlchemy"
+                },
+                {
+                    "name": "tenacity"
+                }
+            ],
+            "timestamp": "2024-10-03 15:20:08"
+        },
+        {
+            "name": "langsmith",
+            "version": "0.0.37",
+            "dependencies": [
+                {
+                    "name": "pydantic"
+                },
+                {
+                    "name": "requests"
+                }
+            ],
+            "timestamp": "2024-10-03 15:21:01"
+        },
+        {
+            "name": "langsmith",
+            "version": "0.0.37",
+            "dependencies": [
+                {
+                    "name": "pydantic"
+                },
+                {
+                    "name": "requests"
+                }
+            ],
+            "timestamp": "2024-10-03 15:21:27"
+        },
+        {
+            "name": "langchain",
+            "version": "0.0.292",
+            "dependencies": [
+                {
+                    "name": "aiohttp"
+                },
+                {
+                    "name": "async-timeout"
+                },
+                {
+                    "name": "dataclasses-json"
+                },
+                {
+                    "name": "langsmith"
+                },
+                {
+                    "name": "numexpr"
+                },
+                {
+                    "name": "numpy"
+                },
+                {
+                    "name": "pydantic"
+                },
+                {
+                    "name": "PyYAML"
+                },
+                {
+                    "name": "requests"
+                },
+                {
+                    "name": "SQLAlchemy"
+                },
+                {
+                    "name": "tenacity"
+                }
+            ],
+            "timestamp": "2024-10-03 15:21:33"
         }
     ],
     "modules": [
