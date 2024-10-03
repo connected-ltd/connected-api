@@ -107,15 +107,19 @@ client = OpenAI(
 
 
 def ask_question(wv_class_name, message, target_language):
+    print(1)
     collection = wv_client.collections.get(wv_class_name)
+    print(2)
     # print(collection)
     try:
+        print(3)
         response = collection.query.hybrid(
             query=message,
             limit=5,
             # properties=["content", "filename"]
             # vector=
         )
+        print(4)
         
         results = []
         for obj in response.objects:
@@ -123,7 +127,7 @@ def ask_question(wv_class_name, message, target_language):
                 "content": obj.properties["content"],
                 "filename": obj.properties["filename"]
             })
-        
+        print(5)
         if results:
             context = "\n".join([r["content"] for r in results])
             print("Context: ",context)

@@ -26,12 +26,13 @@ def create_files():
         
         wv_class_name = f"{user_classname}_{file.filename.split('.')[0]}".replace(" ", "").replace("-", "")
         
-        result, status_code = process_uploaded_file(file, wv_client, wv_class_name)  # Unpack the tuple
+        result, status_code = process_uploaded_file(file, wv_client, wv_class_name)  
 
         if result['status'] == "exists":
             return result, status_code
         elif result['status'] == "error":
             return result, status_code
+        print(result, status_code)
         
         try:     
             # TODO: Handle when file already exists

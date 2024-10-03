@@ -24,7 +24,7 @@ def wv_create_class(wv_client, class_name):
     try:
         file_schema = wv_client.collections.create(
             name=class_name,
-            vectorizer_config=Configure.Vectorizer.text2vec_openai(),
+            # vectorizer_config=Configure.Vectorizer.text2vec_openai(),
             generative_config=Configure.Generative.openai(
                 model="gpt-3.5-turbo",
                 frequency_penalty=0,
@@ -84,6 +84,8 @@ def wv_upload_doc(wv_client, text, class_name, filename):
     print(f"Finished importing {len(paragraphs)} paragraphs.")
     print("Failed objects: ", collection.batch.failed_objects)
     print("Failed references: ", collection.batch.failed_references)
+    # print("Batch number errors: ", collection.batch.number_errors)
+
 
 def wv_delete_doc(wv_client, class_name, filename):
     try:

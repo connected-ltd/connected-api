@@ -683,6 +683,34 @@
                 }
             ],
             "timestamp": "2024-09-22 14:20:04"
+        },
+        {
+            "name": "pinecone",
+            "version": "5.3.1",
+            "dependencies": [
+                {
+                    "name": "certifi"
+                },
+                {
+                    "name": "pinecone-plugin-inference"
+                },
+                {
+                    "name": "pinecone-plugin-interface"
+                },
+                {
+                    "name": "python-dateutil"
+                },
+                {
+                    "name": "tqdm"
+                },
+                {
+                    "name": "typing-extensions"
+                },
+                {
+                    "name": "urllib3"
+                }
+            ],
+            "timestamp": "2024-10-03 14:46:54"
         }
     ],
     "modules": [
