@@ -17,7 +17,8 @@ wv_client = weaviate.connect_to_weaviate_cloud(
     headers={'X-OpenAI-Api-key': openai_api_key},
     additional_config=AdditionalConfig(
         timeout=Timeout(init=30, query=60, insert=120)
-    )
+    ),
+    skip_init_checks=True
 )
 
 def wv_create_class(wv_client, class_name):

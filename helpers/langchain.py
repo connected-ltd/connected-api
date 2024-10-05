@@ -70,9 +70,13 @@ def answer_question(question, history=[], language='english', shortcode: Shortco
     return executor.run(input=q, chat_history=chat_history)
 
 def pinecone_train_with_resource(resource_url, shortcode):
+    print(resource_url)
     loader = OnlinePDFLoader(resource_url)
+    
+    print("Here")
 
     data = loader.load()
+    print("Data: ", data[1])
 
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
     texts = text_splitter.split_documents(data)

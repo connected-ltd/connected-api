@@ -770,6 +770,168 @@
                 }
             ],
             "timestamp": "2024-10-03 15:21:33"
+        },
+        {
+            "name": "boto3",
+            "version": "1.35.32",
+            "dependencies": [
+                {
+                    "name": "botocore"
+                },
+                {
+                    "name": "jmespath"
+                },
+                {
+                    "name": "s3transfer"
+                }
+            ],
+            "timestamp": "2024-10-03 16:15:40"
+        },
+        {
+            "name": "unstructured",
+            "version": "0.15.13",
+            "dependencies": [
+                {
+                    "name": "backoff"
+                },
+                {
+                    "name": "beautifulsoup4"
+                },
+                {
+                    "name": "chardet"
+                },
+                {
+                    "name": "dataclasses-json"
+                },
+                {
+                    "name": "emoji"
+                },
+                {
+                    "name": "filetype"
+                },
+                {
+                    "name": "langdetect"
+                },
+                {
+                    "name": "lxml"
+                },
+                {
+                    "name": "nltk"
+                },
+                {
+                    "name": "numpy"
+                },
+                {
+                    "name": "psutil"
+                },
+                {
+                    "name": "python-iso639"
+                },
+                {
+                    "name": "python-magic"
+                },
+                {
+                    "name": "python-oxmsg"
+                },
+                {
+                    "name": "rapidfuzz"
+                },
+                {
+                    "name": "requests"
+                },
+                {
+                    "name": "tabulate"
+                },
+                {
+                    "name": "tqdm"
+                },
+                {
+                    "name": "typing-extensions"
+                },
+                {
+                    "name": "unstructured-client"
+                },
+                {
+                    "name": "wrapt"
+                }
+            ],
+            "timestamp": "2024-10-03 16:23:01"
+        },
+        {
+            "name": "pdfminer",
+            "version": "20191125",
+            "dependencies": [
+                {
+                    "name": "pycryptodome"
+                }
+            ],
+            "timestamp": "2024-10-03 16:26:18"
+        },
+        {
+            "name": "pdfminer.six",
+            "version": "20240706",
+            "dependencies": [
+                {
+                    "name": "charset-normalizer"
+                },
+                {
+                    "name": "cryptography"
+                }
+            ],
+            "timestamp": "2024-10-03 16:27:53"
+        },
+        {
+            "name": "pi_heif",
+            "version": "0.18.0",
+            "dependencies": [
+                {
+                    "name": "pillow"
+                }
+            ],
+            "timestamp": "2024-10-03 16:29:06"
+        },
+        {
+            "name": "unstructured_inference",
+            "version": "0.7.37",
+            "dependencies": [
+                {
+                    "name": "huggingface-hub"
+                },
+                {
+                    "name": "layoutparser"
+                },
+                {
+                    "name": "matplotlib"
+                },
+                {
+                    "name": "numpy"
+                },
+                {
+                    "name": "onnx"
+                },
+                {
+                    "name": "onnxruntime"
+                },
+                {
+                    "name": "opencv-python"
+                },
+                {
+                    "name": "python-multipart"
+                },
+                {
+                    "name": "rapidfuzz"
+                },
+                {
+                    "name": "timm"
+                },
+                {
+                    "name": "torch"
+                },
+                {
+                    "name": "transformers"
+                }
+            ],
+            "timestamp": "2024-10-03 16:46:56"
         }
     ],
     "modules": [
