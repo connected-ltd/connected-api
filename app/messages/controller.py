@@ -8,7 +8,7 @@ from app.numbers.model import *
 from app.shortcodes.model import *
 from app.files.model import *
 from helpers.africastalking import AfricasTalking
-from helpers.chatbot import ask_question, respond_to_prompt
+# from helpers.chatbot import ask_question, respond_to_prompt
 from helpers.langchain import answer_question
 
 bp = Blueprint('messages', __name__)
@@ -58,8 +58,9 @@ def respond_to_message():
 
         else:
             print(f"No weaviate class found for shortcode '{shortcode}'")
-            error_message = respond_to_prompt("", f"The system doesn't have information for this topic. (Responding in {user_language})", user_language)
-            AfricasTalking().send(sender=shortcode, message=error_message, recipients=[sender_number])
+            pass
+            # error_message = answer_question("No shor", [], user_language)
+            # AfricasTalking().send(sender=shortcode, message=error_message, recipients=[sender_number])
 
     else:
         # error_message = respond_to_prompt("", "Your number is not registered in our system.", user_language)
