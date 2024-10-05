@@ -9,7 +9,7 @@ from app.shortcodes.model import *
 from app.shortcode_files.model import *
 from helpers.langchain import pinecone_train_with_resource
 from helpers.upload import do_upload
-from helpers.weaviate import wv_client, wv_delete_doc
+# from helpers.weaviate import wv_client, wv_delete_doc
 from helpers.process_upload_file import process_uploaded_file
 
 bp = Blueprint('files', __name__)
