@@ -72,6 +72,15 @@ class User(db.Model):
         return User.query.filter(User.username==username).first()
     
     @classmethod
+    def delete_account_by_username(cls, username):
+        user = cls.query.filter_by(username=username).first()
+        if user:
+            db.session.delete(user)
+            db.session.commit()
+            return True
+        return False
+    
+    @classmethod
     def create(cls, username, password, address, description, role):
         user = cls(username=username, password=password, address=address, description=description, role=role)
         user.hash_password()

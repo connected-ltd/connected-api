@@ -39,7 +39,25 @@ def register():
     password = request.json.get('password')
     address = request.json.get('address')
     description = request.json.get('description')
+    # role = request.json.get('role')
+    user = User.get_by_username(username)
+    if user is not None:
+        return {'message': 'User already exists', 'status':'failed'}, 400
+    user = User.create(username, password, address, description, None)
+    if user is not None:
+        return {'message': 'User created successfully', 'status':'success'}, 201
+    return {'message': 'User not created successfully', 'status':'failed'}, 400
+
+@bp.post('/register/admin')
+@auth_required('admin')
+def registerAdmin():
+    username = request.json.get('username')
+    password = request.json.get('password')
+    address = request.json.get('address')
+    description = request.json.get('description')
     role = request.json.get('role')
+    if role not in ['admin', 'super_admin']:
+        return {'message': "Invalid role provided", 'status':'failed'}, 400
     user = User.get_by_username(username)
     if user is not None:
         return {'message': 'User already exists', 'status':'failed'}, 400
@@ -47,6 +65,19 @@ def register():
     if user is not None:
         return {'message': 'User created successfully', 'status':'success'}, 201
     return {'message': 'User not created successfully', 'status':'failed'}, 400
+
+@bp.delete('/delete-user/<username>')
+@auth_required('super_admin')
+def delete_user(username):
+    if not username:
+        return {'message': 'Username is required', 'status': 'failed'}, 400
+
+    result = User.delete_account_by_username(username)
+    
+    if result:
+        return {'message': f'User {username} deleted successfully', 'status': 'success'}, 200
+    else:
+        return {'message': f'User {username} not found or deletion failed', 'status': 'failed'}, 404
 
 @bp.post('/refresh')
 @jwt_required(refresh=True)
