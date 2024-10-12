@@ -49,7 +49,7 @@ def register():
     return {'message': 'User not created successfully', 'status':'failed'}, 400
 
 @bp.post('/register/admin')
-@auth_required('admin')
+@auth_required('super_admin')
 def registerAdmin():
     username = request.json.get('username')
     password = request.json.get('password')
