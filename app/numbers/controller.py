@@ -7,7 +7,7 @@ from app.numbers.schema import *
 bp = Blueprint('numbers', __name__)
 
 @bp.post('/numbers')
-@auth_required('admin')
+@auth_required('admin', 'super_admin')
 def create_numbers():
     number = request.json.get('number')
     language = request.json.get('language') # TODO: Make the language selection a dropdown instead to avoid disparities on the database
@@ -21,7 +21,7 @@ def create_numbers():
         return {'message':'Number format is wrong! Please make sure the number starts with +234'}, 400
 
 @bp.get('/numbers/<int:id>')
-@auth_required('admin')
+@auth_required('admin', 'super_admin')
 def get_numbers(id):
     numbers = Numbers.get_by_id(id)
     if numbers is None:
@@ -29,7 +29,7 @@ def get_numbers(id):
     return {'data':NumbersSchema().dump(numbers), 'message': 'Numbers fetched successfully', 'status':'success'}, 200
 
 @bp.put('/numbers/<int:id>')
-@auth_required('admin')
+@auth_required('admin', 'super_admin')
 def update_numbers(id):
     numbers = Numbers.get_by_id(id)
     if numbers is None:
@@ -41,7 +41,7 @@ def update_numbers(id):
     return {'data':NumbersSchema().dump(numbers), 'message': 'Numbers updated successfully', 'status':'success'}, 200
 
 @bp.patch('/numbers/<int:id>')
-@auth_required('admin')
+@auth_required('admin', 'super_admin')
 def patch_numbers(id):
     numbers = Numbers.get_by_id(id)
     if numbers is None:
@@ -53,7 +53,7 @@ def patch_numbers(id):
     return {'data':NumbersSchema().dump(numbers), 'message': 'Numbers updated successfully', 'status':'success'}, 200
 
 @bp.delete('/numbers/<int:id>')
-@auth_required('admin')
+@auth_required('admin', 'super_admin')
 def delete_numbers(id):
     numbers = Numbers.get_by_id(id)
     if numbers is None:
@@ -62,7 +62,7 @@ def delete_numbers(id):
     return {'message': 'Numbers deleted successfully', 'status':'success'}, 200
 
 @bp.get('/numbers')
-@auth_required('admin')
+@auth_required('admin', 'super_admin')
 def get_all_numbers():
     numberss = Numbers.get_all()
     return {'data':NumbersSchema(many=True).dump(numberss), 'message': 'Numbers fetched successfully', 'status':'success'}, 200
