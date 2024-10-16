@@ -71,5 +71,4 @@ def get_all_numbers():
 @auth_required('admin', 'super_admin')
 def get_numbers_stats():
     stats = Numbers.get_numbers_stats()
-    formatted_stats = [{"language": lang, "count": count} for lang, count in stats.items()]
-    return {'data':formatted_stats, 'message': 'Numbers statistics fetched successfully', 'status':'success'}, 200
+    return {'data':[stats], 'message': 'Numbers statistics fetched successfully', 'status':'success'}, 200

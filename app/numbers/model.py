@@ -68,15 +68,23 @@ class Numbers(db.Model):
             cls.language,
             func.count(cls.id).label('count')
         ).filter_by(is_deleted=False).group_by(cls.language).all()
-        
+
         # Create a dictionary with all languages, defaulting to 0
-        all_stats = {lang: 0 for lang in ['english', 'hausa', 'yoruba', 'igbo']}
-        
+        all_stats = {'english': 0, 'hausa': 0, 'yoruba': 0, 'igbo': 0}
+
         # Update the counts from the query results
         for lang, count in stats:
-            all_stats[lang] = count
-        
-        return all_stats
+            all_stats[lang.lower()] = count
+
+        total = sum(all_stats.values())
+
+        return {
+            'english': all_stats['english'],
+            'hausa': all_stats['hausa'],
+            'yoruba': all_stats['yoruba'],
+            'igbo': all_stats['igbo'],
+            'total': total
+        }
     
     @classmethod
     def create(cls, number, language, area_id):
