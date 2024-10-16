@@ -1,4 +1,5 @@
 from app import db
+from sqlalchemy import func
 
 class Numbers(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -60,6 +61,22 @@ class Numbers(db.Model):
     @classmethod
     def get_all(cls):
         return cls.query.filter_by(is_deleted=False).all()
+    
+    @classmethod
+    def get_numbers_stats(cls):
+        stats = db.session.query(
+            cls.language,
+            func.count(cls.id).label('count')
+        ).filter_by(is_deleted=False).group_by(cls.language).all()
+        
+        # Create a dictionary with all languages, defaulting to 0
+        all_stats = {lang: 0 for lang in ['english', 'hausa', 'yoruba', 'igbo']}
+        
+        # Update the counts from the query results
+        for lang, count in stats:
+            all_stats[lang] = count
+        
+        return all_stats
     
     @classmethod
     def create(cls, number, language, area_id):

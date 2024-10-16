@@ -66,3 +66,10 @@ def delete_numbers(id):
 def get_all_numbers():
     numberss = Numbers.get_all()
     return {'data':NumbersSchema(many=True).dump(numberss), 'message': 'Numbers fetched successfully', 'status':'success'}, 200
+
+@bp.get('/numbers/stats')
+@auth_required('admin', 'super_admin')
+def get_numbers_stats():
+    stats = Numbers.get_numbers_stats()
+    formatted_stats = [{"language": lang, "count": count} for lang, count in stats.items()]
+    return {'data':formatted_stats, 'message': 'Numbers statistics fetched successfully', 'status':'success'}, 200
