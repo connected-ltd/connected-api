@@ -7,7 +7,7 @@ from app.user.model import *
 from app.user.schema import *
 from app.shortcodes.model import *
 from app.shortcode_files.model import *
-from helpers.langchain import pinecone_train_with_resource
+from helpers.langchain import train_with_resource
 from helpers.upload import do_upload
 # from helpers.weaviate import wv_client, wv_delete_doc
 # from helpers.process_upload_file import process_uploaded_file
@@ -18,9 +18,15 @@ bp = Blueprint('files', __name__)
 @auth_required()
 def create_files():
     file = request.files.get('file')
-    shortcode: Shortcodes = Shortcodes.get_by_user_id(g.user.id)
-    resource_url = do_upload(file)
-    pinecone_train_with_resource(resource_url, shortcode.shortcode)
+    # shortcode: Shortcodes = Shortcodes.get_by_user_id(g.user.id)
+    shortcode = request.form.get('shortcode')
+    print(shortcode)
+    if file:
+        resource_url = do_upload(file)
+        train_with_resource(resource_url, shortcode)
+        return {'data':FilesSchema().dump(file), 'message': 'Files created successfully', 'status':'success'}, 201
+
+        
 
 # @bp.post('/files')
 # @auth_required()

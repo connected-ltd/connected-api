@@ -9,7 +9,7 @@ from app.shortcodes.model import *
 from app.files.model import *
 from helpers.africastalking import AfricasTalking
 # from helpers.chatbot import ask_question, respond_to_prompt
-from helpers.langchain import answer_question
+from helpers.langchain import qa_chain
 
 bp = Blueprint('messages', __name__)
 
@@ -52,7 +52,7 @@ def respond_to_message():
         wv_class_name = Shortcodes.get_weaviate_class_by_shortcode(shortcode)
         if wv_class_name:
             print("Asking question")
-            answer = answer_question(message, [], user_language, shortcode)
+            answer = qa_chain(message, [])
             # answer = ask_question(wv_class_name, message, user_language)
             AfricasTalking().send(sender=shortcode, message=answer, recipients=[sender_number])
 

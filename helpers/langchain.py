@@ -1,60 +1,127 @@
+from app.user.model import User
+from app.shortcodes.model import *
+from pinecone.grpc import PineconeGRPC as Pinecone
+from pinecone import ServerlessSpec
 import os
-from langchain.document_loaders import OnlinePDFLoader
-from langchain.text_splitter import RecursiveCharacterTextSplitter
 
-from langchain.vectorstores import Pinecone
-from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain_pinecone import PineconeEmbeddings
+from langchain_pinecone import PineconeVectorStore
+from langchain_text_splitters import MarkdownHeaderTextSplitter
+import time
 
-import pinecone
-
-from langchain.chains import RetrievalQA
-from langchain.chat_models import ChatOpenAI
-from langchain.tools import Tool
+from langchain.chains import RetrievalQA  
+from langchain_openai import ChatOpenAI
 from langchain.agents import initialize_agent
 from langchain.agents.types import AgentType
 from langchain.schema import HumanMessage, AIMessage
+from langchain.tools import Tool
+
+from langchain_community.document_loaders import OnlinePDFLoader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+
+from langchain_openai import OpenAIEmbeddings
+
+# organization_shortdoce = Shortcodes.get_by_user_id(User.id)
+# print
+
+pc = Pinecone(api_key=os.environ.get("PINECONE_API_KEY"))
+
+def get_or_create_index(organization_shortcode):
+
+  index_name = organization_shortcode
+
+  if not pc.has_index(index_name):
+      pc.create_index(
+          name=index_name,
+          dimension=1536, 
+          metric="cosine", 
+          spec=ServerlessSpec(
+              cloud="aws", 
+              region="us-east-1"
+          ) 
+      ) 
+  return index_name
 
 
-from app.shortcodes.model import Shortcodes
 
-def answer_question(question, history=[], language='english', shortcode: Shortcodes = Shortcodes()):
+def train_with_resource(resource_url, organization_shortcode):
+    index_name = get_or_create_index(organization_shortcode)
+
+    # Load the PDF
+    loader = OnlinePDFLoader(resource_url)
+    data = loader.load()
+
+    # Split the loaded document into chunks of text
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
+    documents = text_splitter.split_documents(data)
+
+    # Extract text content from the document chunks
+    texts = [doc.page_content for doc in documents]
+
+    # Initialize a LangChain embedding object using the OpenAI API key
     embeddings = OpenAIEmbeddings(openai_api_key=os.getenv("OPENAI_API_KEY"))
+    print(texts)
 
-    pinecone.init(
-        api_key=os.getenv('PINECONE_API_KEY'),
-        environment=os.getenv('PINECONE_API_ENV'),
+    # Embed each chunk and upsert the embeddings into the Pinecone index
+    PineconeVectorStore.from_texts(
+        texts=texts,  # Now this is a list of strings
+        index_name=index_name,
+        embedding=embeddings, 
+        namespace=index_name
     )
 
-    docsearch = Pinecone.from_existing_index(index_name=shortcode.shortcode, embedding=embeddings)
-    
-    llm = ChatOpenAI()
+def delete_resource(resource_url, organization_shortcode):
+    loader = OnlinePDFLoader(resource_url)
+
+    data = loader.load()
+
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
+    texts = text_splitter.split_documents(data)
+
+
+    index = PineconeVectorStore.get_pinecone_index(organization_shortcode)
+    for text in texts:
+        index.delete(filter={'text':{"$eq": text.page_content}})
+
+def qa_chain(question, history=[], partner: User = User()):
+    get_or_create_index(partner.username)
+    # Initialize a LangChain object for chatting with the LLM
+    # without knowledge from Pinecone.
+    llm = ChatOpenAI(
+        openai_api_key=os.environ.get('OPENAI_API_KEY'),
+        model_name='gpt-4o-mini',
+        temperature=0.0
+    )
+
+    # Initialize a LangChain embedding object.
+    embeddings = OpenAIEmbeddings(openai_api_key=os.getenv("OPENAI_API_KEY"))
+
+    docsearch = PineconeVectorStore.from_existing_index(index_name=partner.username, embedding=embeddings, namespace=partner.username)
+
+    # Initialize a LangChain object for chatting with the LLM
+    # with knowledge from Pinecone. 
     qa = RetrievalQA.from_chain_type(
         llm=llm,
         chain_type="stuff",
-        retriever=docsearch.as_retriever(),
+        retriever=docsearch.as_retriever()
     )
 
-    system_message = f"""You are an AI assistant that answers questions based strictly on the provided context. 
-        If the answer cannot be found in the context, say "I don't have enough information to answer that question."
-        Do not use any external knowledge.
-        
-        Provide your answer in {language}."""
+    system_message = f"""
+            "You are the customer support agent of {partner.name}"
+            "Make your responses as concise as possible"
+            """
     tools = [
         Tool(
-            name=f"Assistant",
+            name=f"{partner.name} customer support",
             func=qa.run,
-            description=f"Useful when you need to answer questions",
-        ),
-        # Tool(
-        #     name=f"{partner.name} customer support",
-        #     func=qa.run,
-        #     description=f"Useful when you need to answer {partner.name} questions",
-        # ),
+            description=f"Useful when you need to answer {partner.name} questions",
+        )
     ]
     executor = initialize_agent(
         agent = AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION,
         tools=tools,
         llm=llm,
+        # memory=conversational_memory,
         handle_parsing_errors="Check your output and make sure it conforms!",
         agent_kwargs={"system_message": system_message},
         verbose=True,
@@ -69,49 +136,30 @@ def answer_question(question, history=[], language='english', shortcode: Shortco
 
     return executor.run(input=q, chat_history=chat_history)
 
-def pinecone_train_with_resource(resource_url, shortcode):
-    print(resource_url)
-    loader = OnlinePDFLoader(resource_url)
-    
-    print("Here")
-
-    data = loader.load()
-    print("Data: ", data[1])
-
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
-    texts = text_splitter.split_documents(data)
-    
-
-    embeddings = OpenAIEmbeddings(openai_api_key=os.getenv("OPENAI_API_KEY"))
-
-    pinecone.init(
-        api_key=os.getenv('PINECONE_API_KEY'),
-        environment=os.getenv('PINECONE_API_ENV'),
-    )
-    
-    if shortcode not in pinecone.list_indexes():
-        # we create a new index
-        pinecone.create_index(
-        name=shortcode,
-        metric='cosine',
-        dimension=1536
-        )
-
-    Pinecone.from_texts([t.page_content for t in texts], embeddings, index_name=shortcode)
-
-def pinecone_delete_resource(resource_url, partner_identity):
-    loader = OnlinePDFLoader(resource_url)
-
-    data = loader.load()
-
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
-    texts = text_splitter.split_documents(data)
-
-    pinecone.init(
-        api_key=os.getenv('PINECONE_API_KEY'),
-        environment=os.getenv('PINECONE_API_ENV'),
+def qa_chain_x(query, history=[], partner: User = User()):
+    # Initialize a LangChain object for chatting with the LLM
+    # without knowledge from Pinecone.
+    llm = ChatOpenAI(
+        openai_api_key=os.environ.get('OPENAI_API_KEY'),
+        model_name='gpt-4o-mini',
+        temperature=0.0
     )
 
-    index = Pinecone.get_pinecone_index(partner_identity)
-    for text in texts:
-        index.delete(filter={'text':{"$eq": text.page_content}})
+    # Initialize a LangChain embedding object.
+    model_name = "multilingual-e5-large"  
+    embeddings = PineconeEmbeddings(  
+        model=model_name,  
+        pinecone_api_key=os.environ.get("PINECONE_API_KEY")  
+    )  
+
+    docsearch = PineconeVectorStore.from_existing_index(index_name=partner.username, embedding=embeddings)
+
+    # Initialize a LangChain object for chatting with the LLM
+    # with knowledge from Pinecone. 
+    qa = RetrievalQA.from_chain_type(
+        llm=llm,
+        chain_type="stuff",
+        retriever=docsearch.as_retriever()
+    )
+
+    return qa.invoke(query).get("result")

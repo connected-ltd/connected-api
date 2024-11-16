@@ -932,6 +932,792 @@
                 }
             ],
             "timestamp": "2024-10-03 16:46:56"
+        },
+        {
+            "name": "langchain_pinecone",
+            "version": "0.2.0",
+            "dependencies": [
+                {
+                    "name": "aiohttp"
+                },
+                {
+                    "name": "langchain-core"
+                },
+                {
+                    "name": "numpy"
+                },
+                {
+                    "name": "pinecone-client"
+                }
+            ],
+            "timestamp": "2024-11-15 13:50:04"
+        },
+        {
+            "name": "langchain_community",
+            "version": "0.3.7",
+            "dependencies": [
+                {
+                    "name": "aiohttp"
+                },
+                {
+                    "name": "dataclasses-json"
+                },
+                {
+                    "name": "httpx-sse"
+                },
+                {
+                    "name": "langchain"
+                },
+                {
+                    "name": "langchain-core"
+                },
+                {
+                    "name": "langsmith"
+                },
+                {
+                    "name": "numpy"
+                },
+                {
+                    "name": "pydantic-settings"
+                },
+                {
+                    "name": "PyYAML"
+                },
+                {
+                    "name": "requests"
+                },
+                {
+                    "name": "SQLAlchemy"
+                },
+                {
+                    "name": "tenacity"
+                }
+            ],
+            "timestamp": "2024-11-15 13:52:19"
+        },
+        {
+            "name": "googleapis-common-protos",
+            "version": "1.65.0",
+            "dependencies": [
+                {
+                    "name": "protobuf"
+                }
+            ],
+            "timestamp": "2024-11-15 14:26:14"
+        },
+        {
+            "name": "grpcio",
+            "version": "1.66.1",
+            "dependencies": [],
+            "timestamp": "2024-11-15 14:27:40"
+        },
+        {
+            "name": "langchain",
+            "version": "0.3.7",
+            "dependencies": [
+                {
+                    "name": "aiohttp"
+                },
+                {
+                    "name": "langchain-core"
+                },
+                {
+                    "name": "langchain-text-splitters"
+                },
+                {
+                    "name": "langsmith"
+                },
+                {
+                    "name": "numpy"
+                },
+                {
+                    "name": "pydantic"
+                },
+                {
+                    "name": "PyYAML"
+                },
+                {
+                    "name": "requests"
+                },
+                {
+                    "name": "SQLAlchemy"
+                },
+                {
+                    "name": "tenacity"
+                }
+            ],
+            "timestamp": "2024-11-15 14:29:32"
+        },
+        {
+            "name": "langchain-community",
+            "version": "0.3.7",
+            "dependencies": [
+                {
+                    "name": "aiohttp"
+                },
+                {
+                    "name": "dataclasses-json"
+                },
+                {
+                    "name": "httpx-sse"
+                },
+                {
+                    "name": "langchain"
+                },
+                {
+                    "name": "langchain-core"
+                },
+                {
+                    "name": "langsmith"
+                },
+                {
+                    "name": "numpy"
+                },
+                {
+                    "name": "pydantic-settings"
+                },
+                {
+                    "name": "PyYAML"
+                },
+                {
+                    "name": "requests"
+                },
+                {
+                    "name": "SQLAlchemy"
+                },
+                {
+                    "name": "tenacity"
+                }
+            ],
+            "timestamp": "2024-11-15 14:30:09"
+        },
+        {
+            "name": "langchain-pinecone",
+            "version": "0.2.0",
+            "dependencies": [
+                {
+                    "name": "aiohttp"
+                },
+                {
+                    "name": "langchain-core"
+                },
+                {
+                    "name": "numpy"
+                },
+                {
+                    "name": "pinecone-client"
+                }
+            ],
+            "timestamp": "2024-11-15 14:30:30"
+        },
+        {
+            "name": "langchain-text-splitters",
+            "version": "0.3.0",
+            "dependencies": [
+                {
+                    "name": "langchain-core"
+                }
+            ],
+            "timestamp": "2024-11-15 14:31:04"
+        },
+        {
+            "name": "langdetect",
+            "version": "1.0.9",
+            "dependencies": [
+                {
+                    "name": "six"
+                }
+            ],
+            "timestamp": "2024-11-15 14:31:23"
+        },
+        {
+            "name": "langsmith",
+            "version": "0.1.134",
+            "dependencies": [
+                {
+                    "name": "httpx"
+                },
+                {
+                    "name": "orjson"
+                },
+                {
+                    "name": "pydantic"
+                },
+                {
+                    "name": "requests"
+                },
+                {
+                    "name": "requests-toolbelt"
+                }
+            ],
+            "timestamp": "2024-11-15 14:32:59"
+        },
+        {
+            "name": "pinecone",
+            "version": "5.3.1",
+            "dependencies": [
+                {
+                    "name": "certifi"
+                },
+                {
+                    "name": "pinecone-plugin-inference"
+                },
+                {
+                    "name": "pinecone-plugin-interface"
+                },
+                {
+                    "name": "python-dateutil"
+                },
+                {
+                    "name": "tqdm"
+                },
+                {
+                    "name": "typing-extensions"
+                },
+                {
+                    "name": "urllib3"
+                }
+            ],
+            "timestamp": "2024-11-15 14:33:54"
+        },
+        {
+            "name": "pinecone-client",
+            "version": "5.0.1",
+            "dependencies": [
+                {
+                    "name": "certifi"
+                },
+                {
+                    "name": "pinecone-plugin-inference"
+                },
+                {
+                    "name": "pinecone-plugin-interface"
+                },
+                {
+                    "name": "tqdm"
+                },
+                {
+                    "name": "typing-extensions"
+                },
+                {
+                    "name": "urllib3"
+                }
+            ],
+            "timestamp": "2024-11-15 14:35:38"
+        },
+        {
+            "name": "pinecone-plugin-inference",
+            "version": "1.1.0",
+            "dependencies": [
+                {
+                    "name": "pinecone-plugin-interface"
+                }
+            ],
+            "timestamp": "2024-11-15 14:36:30"
+        },
+        {
+            "name": "pinecone-plugin-interface",
+            "version": "0.0.7",
+            "dependencies": [],
+            "timestamp": "2024-11-15 14:37:27"
+        },
+        {
+            "name": "protoc-gen-openapiv2",
+            "version": "0.0.1",
+            "dependencies": [
+                {
+                    "name": "googleapis-common-protos"
+                },
+                {
+                    "name": "protobuf"
+                }
+            ],
+            "timestamp": "2024-11-15 14:39:29"
+        },
+        {
+            "name": "pydantic",
+            "version": "2.9.1",
+            "dependencies": [
+                {
+                    "name": "annotated-types"
+                },
+                {
+                    "name": "pydantic-core"
+                },
+                {
+                    "name": "typing-extensions"
+                }
+            ],
+            "timestamp": "2024-11-15 14:43:25"
+        },
+        {
+            "name": "pydantic-settings",
+            "version": "2.5.2",
+            "dependencies": [
+                {
+                    "name": "pydantic"
+                },
+                {
+                    "name": "python-dotenv"
+                }
+            ],
+            "timestamp": "2024-11-15 14:44:17"
+        },
+        {
+            "name": "pydantic_core",
+            "version": "2.23.3",
+            "dependencies": [
+                {
+                    "name": "typing-extensions"
+                }
+            ],
+            "timestamp": "2024-11-15 14:45:07"
+        },
+        {
+            "name": "langchain-openai",
+            "version": null,
+            "dependencies": [],
+            "timestamp": "2024-11-15 14:49:20"
+        },
+        {
+            "name": "langchain-openai",
+            "version": null,
+            "dependencies": [],
+            "timestamp": "2024-11-15 14:51:19"
+        },
+        {
+            "name": "langchain-openai",
+            "version": "0.2.8",
+            "dependencies": [
+                {
+                    "name": "langchain-core"
+                },
+                {
+                    "name": "openai"
+                },
+                {
+                    "name": "tiktoken"
+                }
+            ],
+            "timestamp": "2024-11-15 19:49:40"
+        },
+        {
+            "name": "googleapis-common-protos",
+            "version": "1.65.0",
+            "dependencies": [
+                {
+                    "name": "protobuf"
+                }
+            ],
+            "timestamp": "2024-11-15 19:58:00"
+        },
+        {
+            "name": "grpcio",
+            "version": "1.66.2",
+            "dependencies": [],
+            "timestamp": "2024-11-15 19:58:44"
+        },
+        {
+            "name": "langchain",
+            "version": "0.3.3",
+            "dependencies": [
+                {
+                    "name": "aiohttp"
+                },
+                {
+                    "name": "langchain-core"
+                },
+                {
+                    "name": "langchain-text-splitters"
+                },
+                {
+                    "name": "langsmith"
+                },
+                {
+                    "name": "numpy"
+                },
+                {
+                    "name": "pydantic"
+                },
+                {
+                    "name": "PyYAML"
+                },
+                {
+                    "name": "requests"
+                },
+                {
+                    "name": "SQLAlchemy"
+                },
+                {
+                    "name": "tenacity"
+                }
+            ],
+            "timestamp": "2024-11-15 20:01:35"
+        },
+        {
+            "name": "langchain-community",
+            "version": "0.3.2",
+            "dependencies": [
+                {
+                    "name": "aiohttp"
+                },
+                {
+                    "name": "dataclasses-json"
+                },
+                {
+                    "name": "langchain"
+                },
+                {
+                    "name": "langchain-core"
+                },
+                {
+                    "name": "langsmith"
+                },
+                {
+                    "name": "numpy"
+                },
+                {
+                    "name": "pydantic-settings"
+                },
+                {
+                    "name": "PyYAML"
+                },
+                {
+                    "name": "requests"
+                },
+                {
+                    "name": "SQLAlchemy"
+                },
+                {
+                    "name": "tenacity"
+                }
+            ],
+            "timestamp": "2024-11-15 20:09:15"
+        },
+        {
+            "name": "langchain-core",
+            "version": "0.3.10",
+            "dependencies": [
+                {
+                    "name": "jsonpatch"
+                },
+                {
+                    "name": "langsmith"
+                },
+                {
+                    "name": "packaging"
+                },
+                {
+                    "name": "pydantic"
+                },
+                {
+                    "name": "PyYAML"
+                },
+                {
+                    "name": "tenacity"
+                },
+                {
+                    "name": "typing-extensions"
+                }
+            ],
+            "timestamp": "2024-11-15 20:10:21"
+        },
+        {
+            "name": "langchain-openai",
+            "version": "0.2.2",
+            "dependencies": [
+                {
+                    "name": "langchain-core"
+                },
+                {
+                    "name": "openai"
+                },
+                {
+                    "name": "tiktoken"
+                }
+            ],
+            "timestamp": "2024-11-15 20:12:11"
+        },
+        {
+            "name": "langchain-pinecone",
+            "version": "0.2.0",
+            "dependencies": [
+                {
+                    "name": "aiohttp"
+                },
+                {
+                    "name": "langchain-core"
+                },
+                {
+                    "name": "numpy"
+                },
+                {
+                    "name": "pinecone-client"
+                }
+            ],
+            "timestamp": "2024-11-15 20:13:27"
+        },
+        {
+            "name": "langchain-text-splitters",
+            "version": "0.3.0",
+            "dependencies": [
+                {
+                    "name": "langchain-core"
+                }
+            ],
+            "timestamp": "2024-11-15 20:14:47"
+        },
+        {
+            "name": "langdetect",
+            "version": "1.0.9",
+            "dependencies": [
+                {
+                    "name": "six"
+                }
+            ],
+            "timestamp": "2024-11-15 20:15:19"
+        },
+        {
+            "name": "langsmith",
+            "version": "0.1.134",
+            "dependencies": [
+                {
+                    "name": "httpx"
+                },
+                {
+                    "name": "orjson"
+                },
+                {
+                    "name": "pydantic"
+                },
+                {
+                    "name": "requests"
+                },
+                {
+                    "name": "requests-toolbelt"
+                }
+            ],
+            "timestamp": "2024-11-15 20:15:44"
+        },
+        {
+            "name": "pinecone",
+            "version": "5.3.1",
+            "dependencies": [
+                {
+                    "name": "certifi"
+                },
+                {
+                    "name": "pinecone-plugin-inference"
+                },
+                {
+                    "name": "pinecone-plugin-interface"
+                },
+                {
+                    "name": "python-dateutil"
+                },
+                {
+                    "name": "tqdm"
+                },
+                {
+                    "name": "typing-extensions"
+                },
+                {
+                    "name": "urllib3"
+                }
+            ],
+            "timestamp": "2024-11-15 20:16:09"
+        },
+        {
+            "name": "pinecone-client",
+            "version": "5.0.1",
+            "dependencies": [
+                {
+                    "name": "certifi"
+                },
+                {
+                    "name": "pinecone-plugin-inference"
+                },
+                {
+                    "name": "pinecone-plugin-interface"
+                },
+                {
+                    "name": "tqdm"
+                },
+                {
+                    "name": "typing-extensions"
+                },
+                {
+                    "name": "urllib3"
+                }
+            ],
+            "timestamp": "2024-11-15 20:16:49"
+        },
+        {
+            "name": "pinecone-plugin-inference",
+            "version": "1.1.0",
+            "dependencies": [
+                {
+                    "name": "pinecone-plugin-interface"
+                }
+            ],
+            "timestamp": "2024-11-15 20:17:29"
+        },
+        {
+            "name": "pinecone-plugin-interface",
+            "version": "0.0.7",
+            "dependencies": [],
+            "timestamp": "2024-11-15 20:18:08"
+        },
+        {
+            "name": "protoc-gen-openapiv2",
+            "version": "0.0.1",
+            "dependencies": [
+                {
+                    "name": "googleapis-common-protos"
+                },
+                {
+                    "name": "protobuf"
+                }
+            ],
+            "timestamp": "2024-11-15 20:18:58"
+        },
+        {
+            "name": "pydantic",
+            "version": "2.9.2",
+            "dependencies": [
+                {
+                    "name": "annotated-types"
+                },
+                {
+                    "name": "pydantic-core"
+                },
+                {
+                    "name": "typing-extensions"
+                }
+            ],
+            "timestamp": "2024-11-15 20:19:13"
+        },
+        {
+            "name": "pydantic-settings",
+            "version": "2.5.2",
+            "dependencies": [
+                {
+                    "name": "pydantic"
+                },
+                {
+                    "name": "python-dotenv"
+                }
+            ],
+            "timestamp": "2024-11-15 20:19:28"
+        },
+        {
+            "name": "pydantic_core",
+            "version": "2.23.4",
+            "dependencies": [
+                {
+                    "name": "typing-extensions"
+                }
+            ],
+            "timestamp": "2024-11-15 20:19:45"
+        },
+        {
+            "name": "langchain",
+            "version": "0.3.3",
+            "dependencies": [
+                {
+                    "name": "aiohttp"
+                },
+                {
+                    "name": "langchain-core"
+                },
+                {
+                    "name": "langchain-text-splitters"
+                },
+                {
+                    "name": "langsmith"
+                },
+                {
+                    "name": "numpy"
+                },
+                {
+                    "name": "pydantic"
+                },
+                {
+                    "name": "PyYAML"
+                },
+                {
+                    "name": "requests"
+                },
+                {
+                    "name": "SQLAlchemy"
+                },
+                {
+                    "name": "tenacity"
+                }
+            ],
+            "timestamp": "2024-11-15 22:52:34"
+        },
+        {
+            "name": "pinecone-client",
+            "version": "5.0.1",
+            "dependencies": [
+                {
+                    "name": "certifi"
+                },
+                {
+                    "name": "pinecone-plugin-inference"
+                },
+                {
+                    "name": "pinecone-plugin-interface"
+                },
+                {
+                    "name": "tqdm"
+                },
+                {
+                    "name": "typing-extensions"
+                },
+                {
+                    "name": "urllib3"
+                }
+            ],
+            "timestamp": "2024-11-15 22:52:41"
+        },
+        {
+            "name": "langchain",
+            "version": "0.3.3",
+            "dependencies": [
+                {
+                    "name": "aiohttp"
+                },
+                {
+                    "name": "langchain-core"
+                },
+                {
+                    "name": "langchain-text-splitters"
+                },
+                {
+                    "name": "langsmith"
+                },
+                {
+                    "name": "numpy"
+                },
+                {
+                    "name": "pydantic"
+                },
+                {
+                    "name": "PyYAML"
+                },
+                {
+                    "name": "requests"
+                },
+                {
+                    "name": "SQLAlchemy"
+                },
+                {
+                    "name": "tenacity"
+                }
+            ],
+            "timestamp": "2024-11-15 22:54:03"
         }
     ],
     "modules": [
