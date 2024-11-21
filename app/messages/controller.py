@@ -8,7 +8,6 @@ from app.numbers.model import *
 from app.shortcodes.model import *
 from app.files.model import *
 from helpers.africastalking import AfricasTalking
-# from helpers.chatbot import ask_question, respond_to_prompt
 from helpers.langchain import qa_chain
 
 bp = Blueprint('messages', __name__)
@@ -21,7 +20,6 @@ def create_messages():
     user_id = request.json.get('user_id')
     area_id = request.json.get('area_id')
     numbers_to_send = Numbers.get_all_numbers_only_by_area_id(area_id)
-    # print("Numbers to send: ", numbers_to_send)
     sender_shortcode = Shortcodes.get_shortcode_only_by_id(shortcode_id)
     if numbers_to_send:
         for number in numbers_to_send:
@@ -37,33 +35,18 @@ def create_messages():
 @bp.post('/messages/reply')
 def respond_to_message():
     response = request.form
-    print(f"message: {response.get('text')}")
-    print(f"from: {response.get('from')}")
-    print(f"to: {response.get('to')}")
-    
     chat_history = []
     sender_number = response.get('from')
     shortcode = response.get('to')
     message = response.get('text')
     
     user_language = Numbers.get_language_by_number(sender_number)
+    # print("Language: ", user_language)
     number_exists = Numbers.check_if_number_exists(sender_number)
     if number_exists:
-        wv_class_name = Shortcodes.get_weaviate_class_by_shortcode(shortcode)
-        if wv_class_name:
-            print("Asking question")
-            answer = qa_chain(message, [])
-            # answer = ask_question(wv_class_name, message, user_language)
-            AfricasTalking().send(sender=shortcode, message=answer, recipients=[sender_number])
-
-        else:
-            print(f"No weaviate class found for shortcode '{shortcode}'")
-            pass
-            # error_message = answer_question("No shor", [], user_language)
-            # AfricasTalking().send(sender=shortcode, message=error_message, recipients=[sender_number])
-
+        answer = qa_chain(message, chat_history, shortcode, user_language)
+        AfricasTalking().send(sender=shortcode, message=answer, recipients=[sender_number])
     else:
-        # error_message = respond_to_prompt("", "Your number is not registered in our system.", user_language)
         AfricasTalking().send(sender=shortcode, message="Your number is not registered in our system, please dial *384*89709# to register.", recipients=[sender_number])    
     
     

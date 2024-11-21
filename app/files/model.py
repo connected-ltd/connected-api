@@ -3,7 +3,6 @@ from app import db
 class Files(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True, nullable=False)
-    weaviate_class = db.Column(db.String, unique=True, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=db.func.now())
     updated_at = db.Column(db.DateTime, default=db.func.now())
@@ -13,10 +12,9 @@ class Files(db.Model):
         db.session.add(self)
         db.session.commit()
 
-    def update(self, name=None, user_id=None, weaviate_class=None):
+    def update(self, name=None, user_id=None):
         self.name = name or self.name
         self.user_id = user_id or self.user_id
-        self.weaviate_class = weaviate_class or self.weaviate_class
         self.updated_at = db.func.now()
         db.session.commit()
     
@@ -38,7 +36,7 @@ class Files(db.Model):
         return cls.query.filter_by(is_deleted=False).all()
     
     @classmethod
-    def create(cls, name, user_id, weaviate_class):
-        files = cls(name=name, user_id=user_id, weaviate_class=weaviate_class)
+    def create(cls, name, user_id):
+        files = cls(name=name, user_id=user_id)
         files.save()
         return files

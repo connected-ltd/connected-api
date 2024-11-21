@@ -6,11 +6,11 @@ from app.files.schema import *
 from app.user.model import *
 from app.user.schema import *
 from app.shortcodes.model import *
+from app.shortcodes.schema import *
 from app.shortcode_files.model import *
-from helpers.langchain import train_with_resource
+# from helpers.langchain import train_with_resource
+from app.celery.tasks import train_with_resource_in_background
 from helpers.upload import do_upload
-# from helpers.weaviate import wv_client, wv_delete_doc
-# from helpers.process_upload_file import process_uploaded_file
 
 bp = Blueprint('files', __name__)
 
@@ -18,13 +18,16 @@ bp = Blueprint('files', __name__)
 @auth_required()
 def create_files():
     file = request.files.get('file')
-    # shortcode: Shortcodes = Shortcodes.get_by_user_id(g.user.id)
-    shortcode = request.form.get('shortcode')
-    print(shortcode)
+    shortcode_data: Shortcodes = Shortcodes.get_by_user_id(g.user.id)
+    shortcode = ShortcodesSchema().dump(shortcode_data)
     if file:
         resource_url = do_upload(file)
-        train_with_resource(resource_url, shortcode)
-        return {'data':FilesSchema().dump(file), 'message': 'Files created successfully', 'status':'success'}, 201
+        train_with_resource_in_background.delay(resource_url, shortcode['shortcode'])
+        print("File name: ", file.filename)
+        print("User id: ", g.user.id)
+        fileData = Files.create(file.filename, g.user.id)
+        return {'data':FilesSchema().dump(fileData), 'message': 'Files created successfully', 'status':'success'}, 201
+    return {'message': 'No file was supplied', 'status':'failed'}, 401
 
         
 
@@ -88,8 +91,7 @@ def update_files(id):
         return {'message': 'Files not found'}, 404
     name = request.json.get('name')
     user_id = request.json.get('user_id')
-    weaviate_class = request.json.get('weaviate_class')
-    files.update(name, user_id, weaviate_class)
+    files.update(name, user_id)
     return {'data':FilesSchema().dump(files), 'message': 'Files updated successfully', 'status':'success'}, 200
 
 @bp.patch('/files/<int:id>')
@@ -100,8 +102,7 @@ def patch_files(id):
         return {'message': 'Files not found'}, 404
     name = request.json.get('name')
     user_id = request.json.get('user_id')
-    weaviate_class = request.json.get('weaviate_class')
-    files.update(name, user_id, weaviate_class)
+    files.update(name, user_id)
     return {'data':FilesSchema().dump(files), 'message': 'Files updated successfully', 'status':'success'}, 200
 
 @bp.delete('/files/<int:id>')

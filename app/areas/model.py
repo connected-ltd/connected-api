@@ -1,4 +1,5 @@
 from app import db
+from app.numbers.model import *
 
 class Areas(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -33,6 +34,19 @@ class Areas(db.Model):
     @classmethod
     def get_all_by_name(cls, name):
         return cls.query.filter_by(name=name).first()
+    
+    @classmethod
+    def get_numbers_per_area(cls):
+        result = db.session.query(
+            Areas.name.label('area_name'),
+            func.coalesce(func.count(Numbers.id), 0).label('number_count')  # Handle zero counts
+        ).outerjoin(  # Use outerjoin to include areas without any numbers
+            Numbers, Numbers.area_id == Areas.id
+        ).filter(
+            Areas.is_deleted == False  # Don't need to filter Numbers here as we'll handle NULL counts
+        ).group_by(Areas.id).all()
+
+        return [{'area_name': area_name, 'number_count': number_count} for area_name, number_count in result]
     
     @classmethod
     def create(cls, name):

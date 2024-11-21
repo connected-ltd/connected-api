@@ -14,6 +14,14 @@ COPY .fs .
 RUN pip install --upgrade flask-setup
 RUN fs install
 
+RUN apt-get update && apt-get install -y \
+    tesseract-ocr \
+    libtesseract-dev \
+    poppler-utils \
+    libgl1 \
+    libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY . .
 
 # TODO: Add all your environment variables here
@@ -25,9 +33,6 @@ ENV OPENAI_API_KEY=${OPENAI_API_KEY}
 
 ARG PINECONE_API_KEY
 ENV PINECONE_API_KEY=${PINECONE_API_KEY}
-
-ARG PINECONE_API_ENV
-ENV PINECONE_API_ENV=${PINECONE_API_ENV}
 
 ARG AFRICASTALKING_API_KEY
 ENV AFRICASTALKING_API_KEY=${AFRICASTALKING_API_KEY}

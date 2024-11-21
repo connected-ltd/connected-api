@@ -60,7 +60,6 @@ def train_with_resource(resource_url, organization_shortcode):
 
     # Initialize a LangChain embedding object using the OpenAI API key
     embeddings = OpenAIEmbeddings(openai_api_key=os.getenv("OPENAI_API_KEY"))
-    print(texts)
 
     # Embed each chunk and upsert the embeddings into the Pinecone index
     PineconeVectorStore.from_texts(
@@ -83,8 +82,9 @@ def delete_resource(resource_url, organization_shortcode):
     for text in texts:
         index.delete(filter={'text':{"$eq": text.page_content}})
 
-def qa_chain(question, history=[], partner: User = User()):
-    get_or_create_index(partner.username)
+def qa_chain(question, history=[], shortcode="", language=""):
+    username = Shortcodes.get_username_by_shortcode(shortcode)
+    get_or_create_index(shortcode)
     # Initialize a LangChain object for chatting with the LLM
     # without knowledge from Pinecone.
     llm = ChatOpenAI(
@@ -96,7 +96,7 @@ def qa_chain(question, history=[], partner: User = User()):
     # Initialize a LangChain embedding object.
     embeddings = OpenAIEmbeddings(openai_api_key=os.getenv("OPENAI_API_KEY"))
 
-    docsearch = PineconeVectorStore.from_existing_index(index_name=partner.username, embedding=embeddings, namespace=partner.username)
+    docsearch = PineconeVectorStore.from_existing_index(index_name=shortcode, embedding=embeddings, namespace=shortcode)
 
     # Initialize a LangChain object for chatting with the LLM
     # with knowledge from Pinecone. 
@@ -107,14 +107,17 @@ def qa_chain(question, history=[], partner: User = User()):
     )
 
     system_message = f"""
-            "You are the customer support agent of {partner.name}"
-            "Make your responses as concise as possible"
+            "You are the point of contact in charge of user queries for {username}"
+            "Make your responses as concise as possible and try your best to always answer according to the document."
+            "Make sure your responses are less than 300 characters maximum"
+            "Make sure you respond in {language}"
+            "Else, if user queries is not in {language}, Make sure your response is in the same language you were queried with"
             """
     tools = [
         Tool(
-            name=f"{partner.name} customer support",
+            name=f"{username} help desk agent",
             func=qa.run,
-            description=f"Useful when you need to answer {partner.name} questions",
+            description=f"Useful when you need to answer {username} questions",
         )
     ]
     executor = initialize_agent(

@@ -7,7 +7,7 @@ from app.areas.schema import *
 bp = Blueprint('areas', __name__)
 
 @bp.post('/areas')
-@auth_required('executive')
+@auth_required('super_admin')
 def create_areas():
     name = request.json.get('name')
     areas = Areas.create(name)
@@ -22,7 +22,7 @@ def get_areas(id):
     return {'data':AreasSchema().dump(areas), 'message': 'Areas fetched successfully', 'status':'success'}, 200
 
 @bp.put('/areas/<int:id>')
-@auth_required('executive')
+@auth_required('super_admin')
 def update_areas(id):
     areas = Areas.get_by_id(id)
     if areas is None:
@@ -42,7 +42,7 @@ def patch_areas(id):
     return {'data':AreasSchema().dump(areas), 'message': 'Areas updated successfully', 'status':'success'}, 200
 
 @bp.delete('/areas/<int:id>')
-@auth_required('executive')
+@auth_required('super_admin')
 def delete_areas(id):
     areas = Areas.get_by_id(id)
     if areas is None:
@@ -55,3 +55,9 @@ def delete_areas(id):
 def get_all_areas():
     areass = Areas.get_all()
     return {'data':AreasSchema(many=True).dump(areass), 'message': 'Areas fetched successfully', 'status':'success'}, 200
+
+@bp.get('/areas/numbers')
+@auth_required()
+def get_numbers_per_areas():
+    areas_stats = Areas.get_numbers_per_area()
+    return {'data':areas_stats, 'message': 'Numbers per Areas stats fetched successfully', 'status':'success'}, 200

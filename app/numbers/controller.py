@@ -10,7 +10,7 @@ bp = Blueprint('numbers', __name__)
 @auth_required('admin', 'super_admin')
 def create_numbers():
     number = request.json.get('number')
-    language = request.json.get('language') # TODO: Make the language selection a dropdown instead to avoid disparities on the database
+    language = request.json.get('language') 
     area_id = request.json.get('area_id')
     if number[0:4] == "+234" and len(number) == 14:
         numbers = Numbers.create(number, language, area_id)

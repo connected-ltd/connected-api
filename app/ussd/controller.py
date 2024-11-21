@@ -122,46 +122,129 @@ def search_area_prompt(**kwargs):
     Ussd.create_or_update(kwargs['session_id'], 'process_area_search', previous='update_user_area')
     return response
 
+def display_search_results(page, matching_areas, **kwargs):
+    start_index = (page - 1) * ITEMS_PER_PAGE
+    end_index = start_index + ITEMS_PER_PAGE
+    current_page_areas = matching_areas[start_index:end_index]
+    
+    response = "CON Select your area:\n"
+    for i, area in enumerate(current_page_areas, 1):
+        response += f"{i}. {area.name}\n"
+
+    # Add navigation options
+    if end_index < len(matching_areas):
+        response += f"{ITEMS_PER_PAGE + 1}. Next page\n"
+    if page > 1:
+        response += "0. Previous page\n"
+    response += "98. New search\n"
+    response += "99. Main menu"
+
+    Ussd.create_or_update(
+        kwargs['session_id'],
+        'process_search_selection',
+        previous=f"search,{page},{','.join([str(area.id) for area in matching_areas])}"
+    )
+    return response
+
+# def process_area_search(**kwargs):
+#     search_term = kwargs['selection'].split('*')[-1].lower()
+#     if len(search_term) < 3:
+#         return "CON Please enter at least 3 letters to search."
+
+#     areas = Areas.get_all()
+#     matching_areas = [area for area in areas if search_term in area.name.lower() or area.name.lower().startswith(search_term)]
+
+#     if not matching_areas:
+#         return "END No matching areas found. Please try again."
+
+#     response = "CON Select your area:\n"
+#     for i, area in enumerate(matching_areas[:ITEMS_PER_PAGE], 1):
+#         response += f"{i}. {area.name}\n"
+
+#     if len(matching_areas) > ITEMS_PER_PAGE:
+#         response += f"{ITEMS_PER_PAGE + 1}. More results\n"
+
+#     Ussd.create_or_update(kwargs['session_id'], 'process_search_selection', previous='search_area_prompt')
+#     Ussd.create_or_update(kwargs['session_id'], 'process_search_selection', previous=','.join([str(area.id) for area in matching_areas]))
+#     return response
+
 def process_area_search(**kwargs):
     search_term = kwargs['selection'].split('*')[-1].lower()
     if len(search_term) < 3:
         return "CON Please enter at least 3 letters to search."
 
     areas = Areas.get_all()
-    matching_areas = [area for area in areas if area.name.lower().startswith(search_term)]
+    matching_areas = [area for area in areas if search_term in area.name.lower() or area.name.lower().startswith(search_term)]
 
     if not matching_areas:
         return "END No matching areas found. Please try again."
 
-    response = "CON Select your area:\n"
-    for i, area in enumerate(matching_areas[:ITEMS_PER_PAGE], 1):
-        response += f"{i}. {area.name}\n"
+    # Store the search results and current page in the session
+    Ussd.create_or_update(
+        kwargs['session_id'], 
+        'display_search_results',
+        previous=f"search,1,{','.join([str(area.id) for area in matching_areas])}"
+    )
+    
+    return display_search_results(page=1, matching_areas=matching_areas, **kwargs)
 
-    if len(matching_areas) > ITEMS_PER_PAGE:
-        response += f"{ITEMS_PER_PAGE + 1}. More results\n"
 
-    Ussd.create_or_update(kwargs['session_id'], 'process_search_selection', previous='search_area_prompt')
-    Ussd.create_or_update(kwargs['session_id'], 'process_search_selection', previous=','.join([str(area.id) for area in matching_areas]))
-    return response
+# def process_search_selection(**kwargs):
+#     selection = kwargs['selection'].split('*')[-1]
+#     search_results = Ussd.get_by_session_id(kwargs['session_id']).previous.split(',')
+#     # print("Search result: ",search_results)
+    
+#     if selection == str(ITEMS_PER_PAGE + 1):
+#         # print("No selection was made")
+#         return "END Feature not implemented. Please try a more specific search."
+    
+#     try:
+#         # print("Area was selected", search_results, selection)
+#         selected_area_id = int(search_results[int(selection) - 1])
+#         # print("selected area id: ", selected_area_id)
+#         selected_area = Areas.get_by_id(selected_area_id)
+#         # print("selected area: ", selected_area)
+#         return do_update_user_area(selected_area, **kwargs)
+#     except (ValueError, IndexError):
+#         return "END Invalid selection. Please try again."
 
 def process_search_selection(**kwargs):
     selection = kwargs['selection'].split('*')[-1]
-    search_results = Ussd.get_by_session_id(kwargs['session_id']).previous.split(',')
-    # print("Search result: ",search_results)
+    session = Ussd.get_by_session_id(kwargs['session_id'])
+    session_data = session.previous.split(',')
     
-    if selection == str(ITEMS_PER_PAGE + 1):
-        # print("No selection was made")
-        return "END Feature not implemented. Please try a more specific search."
+    # Parse session data
+    current_page = int(session_data[1])
+    area_ids = session_data[2:]
+    matching_areas = [Areas.get_by_id(int(area_id)) for area_id in area_ids]
     
-    try:
-        # print("Area was selected", search_results, selection)
-        selected_area_id = int(search_results[int(selection) - 1])
-        # print("selected area id: ", selected_area_id)
-        selected_area = Areas.get_by_id(selected_area_id)
-        # print("selected area: ", selected_area)
-        return do_update_user_area(selected_area, **kwargs)
-    except (ValueError, IndexError):
-        return "END Invalid selection. Please try again."
+    if selection == str(ITEMS_PER_PAGE + 1):  # Next page
+        next_page = current_page + 1
+        return display_search_results(page=next_page, matching_areas=matching_areas, **kwargs)
+    
+    elif selection == '0':  # Previous page
+        prev_page = max(1, current_page - 1)
+        return display_search_results(page=prev_page, matching_areas=matching_areas, **kwargs)
+    
+    elif selection == '98':  # New search
+        return search_area_prompt(**kwargs)
+    
+    elif selection == '99':  # Main menu
+        Ussd.create_or_update(kwargs['session_id'], 'update_user_area', previous='start')
+        return update_user_area(**kwargs)
+    
+    else:
+        try:
+            # Calculate the actual index based on the current page
+            area_index = (current_page - 1) * ITEMS_PER_PAGE + int(selection) - 1
+            
+            if 0 <= area_index < len(matching_areas):
+                selected_area = matching_areas[area_index]
+                return do_update_user_area(selected_area, **kwargs)
+            else:
+                return "END Invalid selection. Please try again."
+        except (ValueError, IndexError):
+            return "END Invalid selection. Please try again."
 
 def do_update_user_area(selected_area, **kwargs):
     number = kwargs['number']
