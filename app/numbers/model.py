@@ -88,6 +88,6 @@ class Numbers(db.Model):
     
     @classmethod
     def create(cls, number, language, area_id):
-        numbers = cls(number=number, language=language, area_id=area_id)
+        numbers = cls(number=number, language=language, area_id=area_id, is_set=False)
         numbers.save()
         return numbers
