@@ -118,7 +118,7 @@ def process_area_selection(**kwargs):
             return f"END An error occurred: {str(e)}. Please try again."
 
 def search_area_prompt(**kwargs):
-    response = "CON Enter the first 3-5 letters of your area name:"
+    response = "CON Enter 3-5 letters of your area name:"
     Ussd.create_or_update(kwargs['session_id'], 'process_area_search', previous='update_user_area')
     return response
 
