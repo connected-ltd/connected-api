@@ -73,21 +73,21 @@ def get_numbers_stats():
     stats = Numbers.get_numbers_stats()
     return {'data':[stats], 'message': 'Numbers statistics fetched successfully', 'status':'success'}, 200
 
-@bp.patch('/numbers/bulk-set-all')
+# @bp.patch('/numbers/bulk-set-all')
 # @auth_required('admin', 'super_admin')
-def bulk_set_all_numbers():
-    # Get all existing numbers
-    numbers = Numbers.get_all()
+# def bulk_set_all_numbers():
+#     # Get all existing numbers
+#     numbers = Numbers.get_all()
     
-    if not numbers:
-        return {'message': 'No numbers found', 'status': 'error'}, 404
+#     if not numbers:
+#         return {'message': 'No numbers found', 'status': 'error'}, 404
 
-    # Bulk update all numbers
-    for number in numbers:
-        number.update(is_set=True)
+#     # Bulk update all numbers
+#     for number in numbers:
+#         number.update(is_set=True)
 
-    return {
-        'data': NumbersSchema(many=True).dump(numbers), 
-        'message': f'{len(numbers)} numbers set status updated successfully', 
-        'status': 'success'
-    }, 200
+#     return {
+#         'data': NumbersSchema(many=True).dump(numbers), 
+#         'message': f'{len(numbers)} numbers set status updated successfully', 
+#         'status': 'success'
+#     }, 200
