@@ -47,7 +47,7 @@ def respond_to_message():
         answer = qa_chain(message, chat_history, shortcode, user_language)
         AfricasTalking().send(sender=shortcode, message=answer, recipients=[sender_number])
     else:
-        AfricasTalking().send(sender=shortcode, message="Your number is not registered in our system, please dial *384*89709# to register.", recipients=[sender_number])    
+        AfricasTalking().send(sender=shortcode, message="Your number is not registered in our system, please dial *347*875# to register.", recipients=[sender_number])    
     
     
     return response
