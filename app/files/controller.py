@@ -8,8 +8,8 @@ from app.user.schema import *
 from app.shortcodes.model import *
 from app.shortcodes.schema import *
 from app.shortcode_files.model import *
-from helpers.langchain import train_with_resource
-# from app.celery.tasks import train_with_resource_in_background
+# from helpers.langchain import train_with_resource
+from app.celery.tasks import train_with_resource_in_background
 from helpers.upload import do_upload
 
 bp = Blueprint('files', __name__)
@@ -22,8 +22,8 @@ def create_files():
     shortcode = ShortcodesSchema().dump(shortcode_data)
     if file:
         resource_url = do_upload(file)
-        # train_with_resource_in_background.delay(resource_url, shortcode['shortcode'])
-        train_with_resource(resource_url, shortcode['shortcode'])
+        train_with_resource_in_background.delay(resource_url, shortcode['shortcode'])
+        # train_with_resource(resource_url, shortcode['shortcode'])
         print("File name: ", file.filename)
         print("User id: ", g.user.id)
         fileData = Files.create(file.filename, g.user.id)

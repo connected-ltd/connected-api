@@ -57,7 +57,7 @@ def get_all_areas():
     return {'data':AreasSchema(many=True).dump(areass), 'message': 'Areas fetched successfully', 'status':'success'}, 200
 
 @bp.get('/areas/numbers')
-# @auth_required()
+@auth_required()
 def get_numbers_per_areas():
     areas_stats = Areas.get_numbers_per_area()
     return {'data':areas_stats, 'message': 'Numbers per Areas stats fetched successfully', 'status':'success'}, 200
