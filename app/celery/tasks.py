@@ -38,7 +38,7 @@ def send_mail(recipients, subject, text, html):
         server.sendmail(
             sender, receiver, message.as_string())
         
-@celery.task
-def train_with_resource_in_background(resource_url="", organization_shortcode=""):
-    train_with_resource(resource_url, organization_shortcode)
+# @celery.task
+# def train_with_resource_in_background(resource_url, organization_shortcode):
+#     train_with_resource(resource_url, organization_shortcode)
     
