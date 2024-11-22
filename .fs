@@ -7,7 +7,7 @@
         "python": "3.12.5",
         "pip": "24.2",
         "fs": "0.7",
-        "port": 5050,
+        "port": 5000,
         "entry-point": "main.py"
     },
     "packages": [
