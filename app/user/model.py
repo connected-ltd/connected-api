@@ -38,13 +38,13 @@ class User(db.Model):
         return bcrypt.checkpw(password.encode('utf-8'), self.password.encode('utf-8'))
     
     def generate_refresh_token(self):
-        return create_refresh_token(self.id)
+        return create_refresh_token(str(self.id))
     
     def generate_access_token(self):
-        return create_access_token(identity=self.id, fresh=True, additional_claims={"role": self.role})
+        return create_access_token(identity=str(self.id), fresh=True, additional_claims={"role": self.role})
     
     def generate_refreshed_access_token(self):
-        return create_access_token(identity=self.id, fresh=False, additional_claims={"role": self.role})
+        return create_access_token(identity=str(self.id), fresh=False, additional_claims={"role": self.role})
     
     def update_password(self, old_password, new_password):
         if self.is_verified(old_password):
