@@ -41,9 +41,7 @@ def respond_to_message():
     message = response.get('text')
     
     appended_message = f'ConnectED {message}'
-    
-    print(appended_message)
-    
+        
     user_language = Numbers.get_language_by_number(sender_number)
     # print("Language: ", user_language)
     number_exists = Numbers.check_if_number_exists(sender_number)
