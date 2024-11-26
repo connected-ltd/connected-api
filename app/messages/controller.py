@@ -44,7 +44,7 @@ def respond_to_message():
     # print("Language: ", user_language)
     number_exists = Numbers.check_if_number_exists(sender_number)
     if number_exists:
-        answer = qa_chain(message, chat_history, shortcode, user_language)
+        answer = qa_chain(f'ConnectED {message}', chat_history, shortcode, user_language)
         AfricasTalking().send(sender=shortcode, message=answer, recipients=[sender_number])
     else:
         AfricasTalking().send(sender=shortcode, message="Your number is not registered in our system, please dial *347*875# to register.", recipients=[sender_number])    
