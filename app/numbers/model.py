@@ -31,7 +31,7 @@ class Numbers(db.Model):
 
     @classmethod
     def get_by_id(cls, id):
-        return cls.query.filter_by(id=id).first()
+        return cls.query.filter_by(id=id, is_deleted=False).first()
     
     @classmethod
     def get_all_number_only(cls):
