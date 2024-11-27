@@ -24,7 +24,7 @@ class Numbers(db.Model):
         db.session.commit()
     
     def delete(self):
-        self.is_deleted = False
+        self.is_deleted = True
         self.updated_at = db.func.now()
         db.session.commit()
 
