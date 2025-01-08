@@ -49,6 +49,29 @@ class Areas(db.Model):
         return [{'area_name': area_name, 'number_count': number_count} for area_name, number_count in result]
     
     @classmethod
+    def get_area_statistics(cls):
+        result = db.session.query(
+            cls.name.label('area_name'),
+            func.count(Numbers.id).label('number_count'),
+            func.array_agg(func.distinct(Numbers.language)).label('languages'),
+            func.count(func.nullif(Numbers.is_set, False)).label('is_set_count')
+        ).outerjoin(
+            Numbers, Numbers.area_id == cls.id
+        ).filter(
+            cls.is_deleted == False
+        ).group_by(cls.id).all()
+
+        return [
+            {
+                'area_name': row.area_name,
+                'number_count': row.number_count,
+                'languages': [lang for lang in row.languages if lang],
+                'is_set_count': row.is_set_count
+            }
+            for row in result
+        ]
+    
+    @classmethod
     def create(cls, name):
         areas = cls(name=name)
         areas.save()

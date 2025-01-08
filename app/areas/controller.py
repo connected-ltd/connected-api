@@ -61,3 +61,8 @@ def get_all_areas():
 def get_numbers_per_areas():
     areas_stats = Areas.get_numbers_per_area()
     return {'data':areas_stats, 'message': 'Numbers per Areas stats fetched successfully', 'status':'success'}, 200
+
+@bp.get('/areas/stats')
+def get_area_statistics():
+    statistics = Areas.get_area_statistics()
+    return {'data':statistics, 'message': 'Area statistics fetched successfully', 'status':'success'}, 200
