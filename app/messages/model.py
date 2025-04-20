@@ -37,6 +37,7 @@ class Messages(db.Model):
     
     @classmethod
     def create(cls, message, shortcode_id, user_id, area_id):
+        # print(message, shortcode_id, user_id, area_id)
         messages = cls(message=message, shortcode_id=shortcode_id, user_id=user_id, area_id=area_id)
         messages.save()
         return messages

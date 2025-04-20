@@ -10,6 +10,7 @@ from flask_jwt_extended import (
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, unique=True, nullable=False)
+    company_name = db.Column(db.String, nullable=True, unique=True)
     password = db.Column(db.String, nullable=False)
     address = db.Column(db.String, nullable=False)
     description = db.Column(db.String, nullable=False)
