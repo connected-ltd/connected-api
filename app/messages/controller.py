@@ -8,6 +8,7 @@ from app.numbers.model import *
 from app.shortcodes.model import *
 from app.files.model import *
 from helpers.africastalking import AfricasTalking
+from helpers.twilio import send_twilio_message
 from helpers.langchain import qa_chain
 
 bp = Blueprint('messages', __name__)
@@ -42,9 +43,9 @@ def respond_to_message():
     
     appended_message = f'ConnectED {message}'
         
+    number_exists = Numbers.check_if_number_exists(sender_number)
     user_language = Numbers.get_language_by_number(sender_number)
     # print("Language: ", user_language)
-    number_exists = Numbers.check_if_number_exists(sender_number)
     if number_exists:
         answer = qa_chain(appended_message, chat_history, shortcode, user_language)
         AfricasTalking().send(sender=shortcode, message=answer, recipients=[sender_number])
@@ -53,6 +54,40 @@ def respond_to_message():
     
     
     return response
+
+@bp.post('/messages/twilio')
+def twilio_response():
+    try:
+        response = request.form
+        chat_history = []
+        sender_number = response.get('From')  
+        recipient_number = response.get('To')
+        message = response.get('Body')
+ 
+        
+        appended_message = f'ConnectED {message}'
+        
+        formatted_sender_number = sender_number.split(':')[1].strip()
+        formatted_recipient_number = recipient_number.split('+')[1].strip()
+        
+        number_exists = Numbers.check_if_number_exists(formatted_sender_number)
+        user_language = Numbers.get_language_by_number(formatted_sender_number)
+        if number_exists:
+            answer = qa_chain(appended_message, chat_history, formatted_recipient_number, user_language)
+            send_twilio_message(to=sender_number, message=answer, from_=recipient_number)
+        else:
+            send_twilio_message(to=sender_number, message="Your number is not registered in our system, please dial *347*875# to register.", from_=recipient_number)    
+        
+        
+        return response
+
+        # response_body = send_twilio_message(from_=recipient_number, to=sender_number)
+
+
+        return {"message": "Message sent successfully", "response_body": response_body}, 200
+    except Exception as e:
+        print(f"Error: {e}")
+        return {"message": f"Failed to send message: {str(e)}"}, 500
     
 
 @bp.get('/messages/<int:id>')

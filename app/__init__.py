@@ -40,6 +40,8 @@ from app.areas.controller import bp as areas_bp
 app.register_blueprint(areas_bp)
 from app.ussd.controller import bp as ussd_bp
 app.register_blueprint(ussd_bp)
+from app.whatsapp_number.controller import bp as whatsapp_number_bp
+app.register_blueprint(whatsapp_number_bp)
 
 # Error handlers
 from .error_handlers import *
