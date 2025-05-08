@@ -1273,6 +1273,25 @@
                 }
             ],
             "timestamp": "2024-11-20 18:49:11"
+        },
+        {
+            "name": "twilio",
+            "version": "9.5.2",
+            "dependencies": [
+                {
+                    "name": "aiohttp"
+                },
+                {
+                    "name": "aiohttp-retry"
+                },
+                {
+                    "name": "PyJWT"
+                },
+                {
+                    "name": "requests"
+                }
+            ],
+            "timestamp": "2025-04-20 22:00:37"
         }
     ],
     "modules": [
@@ -1325,6 +1344,20 @@
                 }
             ],
             "timestamp": "2024-09-30 08:37:52"
+        },
+        {
+            "name": "whatsapp_number",
+            "fields": [
+                {
+                    "name": "number",
+                    "type": "str"
+                },
+                {
+                    "name": "user_id",
+                    "type": "fk=user.id"
+                }
+            ],
+            "timestamp": "2025-05-08 11:16:08"
         }
     ]
 }

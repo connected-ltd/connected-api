@@ -7,6 +7,8 @@ from app.user.model import *
 from app.user.schema import *
 from app.shortcodes.model import *
 from app.shortcodes.schema import *
+from app.whatsapp_number.model import *
+from app.whatsapp_number.schema import *
 from app.shortcode_files.model import *
 # from helpers.langchain import train_with_resource
 from app.celery.tasks import train_with_resource_in_background
@@ -30,6 +32,25 @@ def create_files():
         return {'data':FilesSchema().dump(fileData), 'message': 'Files created successfully', 'status':'success'}, 201
     return {'message': 'No file was supplied', 'status':'failed'}, 401
 
+    
+
+@bp.post('/files/whatsapp')
+@auth_required()
+def create_whatsapp_files():
+    file = request.files.get('file')
+    whatsapp_number_data: Whatsapp_Number = Whatsapp_Number.get_by_user_id(g.user.id)
+    whatsapp_number = Whatsapp_NumberSchema().dump(whatsapp_number_data)
+    formatted_whatsapp_number = whatsapp_number['number'].split('+')[1].strip()
+    if file:
+        resource_url = do_upload(file)
+        train_with_resource_in_background.delay(resource_url, formatted_whatsapp_number)
+        # train_with_resource(resource_url, shortcode['shortcode'])
+        print("File name: ", file.filename)
+        print("User id: ", g.user.id)
+        fileData = Files.create(file.filename, g.user.id)
+        return {'data':FilesSchema().dump(fileData), 'message': 'Files created successfully', 'status':'success'}, 201
+    return {'message': 'No file was supplied', 'status':'failed'}, 401
+# TODO: Test this endpoint later
         
 
 # @bp.post('/files')
