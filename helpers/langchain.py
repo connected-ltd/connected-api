@@ -110,7 +110,7 @@ def qa_chain(question, history=[], shortcode="", language=""):
             "You are the point of contact in charge of user queries for {username}"
             "Make your responses as concise as possible and try your best to always answer according to the document."
             "Make sure your responses are less than 300 characters maximum if {shortcode} is less than 6 characters length"
-            "Make sure your responses are less than 1500 characters maximum if {shortcode} is more than 6 characters length"
+            "Make sure your responses are more than 300 but less than 1500 characters maximum if {shortcode} is more than 6 characters length"
             "Make sure you respond in {language}"
             "Else, if user queries is not in {language}, Make sure your response is in the same language you were queried with"
             """
