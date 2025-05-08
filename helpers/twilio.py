@@ -18,8 +18,8 @@ def send_twilio_message(to, from_, message):
             to=to
         )
 
-        print('Message SID:', message.sid)
-        print('Response Body:', message.body)  
+        # print('Message SID:', message.sid)
+        # print('Response Body:', message.body)  
 
         return message.body
 
