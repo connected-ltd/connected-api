@@ -85,8 +85,11 @@ def delete_resource(resource_url, organization_shortcode):
 def qa_chain(question, history=[], shortcode="", language=""):
     username = Shortcodes.get_username_by_shortcode(shortcode)
     get_or_create_index(shortcode)
+
+    # Determine the maximum response length based on the shortcode length
+    max_response_length = 300 if len(shortcode) <= 5 else 3000
+
     # Initialize a LangChain object for chatting with the LLM
-    # without knowledge from Pinecone.
     llm = ChatOpenAI(
         openai_api_key=os.environ.get('OPENAI_API_KEY'),
         model_name='gpt-4o-mini',
@@ -106,13 +109,13 @@ def qa_chain(question, history=[], shortcode="", language=""):
         retriever=docsearch.as_retriever()
     )
 
+    # Adjust the system message based on the maximum response length
     system_message = f"""
             "You are the point of contact in charge of user queries for {username}"
             "Make your responses as concise as possible and try your best to always answer according to the document."
-            "Make sure your responses are less than 300 characters maximum if {shortcode} is less than 6 characters length"
-            "Make sure your responses are more than 300 but less than 1500 characters maximum if {shortcode} is more than 6 characters length"
-            "Make sure you respond in {language}"
-            "Else, if user queries is not in {language}, Make sure your response is in the same language you were queried with"
+            "Make sure your responses are less than {max_response_length} characters maximum"
+            "Always make sure you respond in {language} language."
+            "If the user's query is not in {language} language, respond in the same language as the query."
             """
     tools = [
         Tool(
@@ -122,10 +125,10 @@ def qa_chain(question, history=[], shortcode="", language=""):
         )
     ]
     executor = initialize_agent(
-        agent = AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION,
+        agent=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION,
         tools=tools,
         llm=llm,
-        # memory=conversational_memory,
+        # memory=chat_history,
         handle_parsing_errors="Check your output and make sure it conforms!",
         agent_kwargs={"system_message": system_message},
         verbose=True,

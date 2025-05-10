@@ -41,7 +41,7 @@ def respond_to_message():
     shortcode = response.get('to')
     message = response.get('text')
     
-    appended_message = f'ConnectED {message}'
+    appended_message = f'{message}'
         
     number_exists = Numbers.check_if_number_exists(sender_number)
     user_language = Numbers.get_language_by_number(sender_number)
@@ -65,7 +65,7 @@ def twilio_response():
         message = response.get('Body')
  
         
-        appended_message = f'ConnectED {message}'
+        appended_message = f'{message}'
         
         formatted_sender_number = sender_number.split(':')[1].strip()
         formatted_recipient_number = recipient_number.split('+')[1].strip()
