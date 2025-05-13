@@ -1,121 +1,149 @@
-# Flask-Setup
+# 📡 Connected API
 
-Flask-Setup is an open-source and user-friendly tool designed to help you set up a Flask project in under 10 minutes. With a single `fs` command, it takes care of all your CRUD operations (HTTP methods) such as post, get, put, and delete automatically.
+This is the backend service powering the Connected platform, built with Flask and organized into modular components. It supports features like file uploads, shortcode integration, SMS and WhatsApp messaging, user management, and USSD operations.
 
-Imagine skipping the tedious setup process and diving straight into building your application's features. Flask-Setup does the heavy lifting, so you can focus on what truly matters rather than setting up boilerplate code.
+---
 
-Explore more and see how Flask-Setup can streamline your Flask development at the [Flask-Setup PyPI page](https://pypi.org/project/flask-setup/).
+## 📁 Project Directory Structure
 
-# Getting Started
+The project follows a modular structure to organize routes, models, and schemas by feature. Here's an overview of each directory and file:
 
-If you have any questions that are beyond the scope of the documentation, Please feel free to [email us](nasir@mrteey.com).
+### Root-Level Files
 
-## Installation
+- **`README.md`**: Provides an overview of the project, including setup instructions, usage guidelines, and other relevant documentation.
 
-Make sure [Python](https://www.python.org/downloads/) is installed on your system (Windows, Linux, macOS). Then, run the following command:
+- **`Dockerfile`**: Contains instructions to build a Docker image for the application, enabling containerized deployments.
 
-```python
-pip install flask-setup
-```
+- **`main.py`**: The main entry point of the application.
 
-## Upgrade
+- **`manage.py`**: Command-line tool for running administrative tasks like migrations and tests.
 
-To upgrade Flask-Setup to the latest version, run the following command:
+- **`run`**: Shell script or executable used to start the app in production or development.
 
-```python
- pip install --upgrade flask-setup
-```
+- **`supervisord.conf`**: Configuration file for Supervisor to manage and auto-restart the backend process.
 
-## Usage
+- **`.fs`**: Specifies Python package dependencies using [Flox](https://flox.dev/) or a similar package manager, as an alternative to `requirements.txt`.
 
-To use Flask-Setup, run the `fs` command followed by the desired argument (`fs command argument`) in the terminal. Here are the available commands:
+---
 
-- build
-- init
-- add
-- remove
-- install
-- uninstall
-- start
+### `app/` – Core Application Logic
 
-The arguments can be a project name, blueprint name, and/or field names with their respective data types.
+Each feature module is structured using a **controller–model–schema** pattern:
 
-## Commands
+- `__init__.py` – Initializes the app as a Python module.
+- `error_handlers.py` – Global error handling logic.
+- `route_guard.py` – Middleware for JWT-based authentication and route protection.
 
-### build
+#### Domain Modules:
 
-This creates a new project with the specified name.
+Each of the following contains logic specific to the domain it serves:
 
-```python
-fs build projectname
-```
+- **`areas/`**: Geographic area definitions and management.
+- **`files/`**: Handles file uploads and metadata.
+- **`messages/`**: Broadcast and SMS/WhatsApp messaging logic.
+- **`numbers/`**: Phone number registration and association.
+- **`shortcode_files/`**: Manages files linked to shortcode functionality.
+- **`shortcodes/`**: Registration and use of shortcode services.
+- **`user/`**: User account creation, login, and profiles.
+- **`ussd/`**: Logic for USSD interactions and menu flows.
+- **`whatsapp_number/`**: WhatsApp number registration and configuration.
 
-### init
+Each of these contains:
 
-This initialises a `.fs` file in the root directory of an existing Flask project, enabling seamless use of Flask-Setup `fs` commands.
+- `controller.py` – API route handlers.
+- `model.py` – SQLAlchemy database models.
+- `schema.py` – Marshmallow schemas for input validation and serialization.
 
-```python
-fs init
-```
+#### `celery/`
 
-### add
+- `__init__.py` – Initializes Celery with Flask context.
+- `tasks.py` – Defines asynchronous tasks (e.g., background jobs, notifications).
 
-This command adds a blueprint with the name 'api' and the specified model fields.
+---
 
-```python
-fs add api ..fields
-```
+### `config/` – Configuration Utilities
 
-- Supported field types include `str` (optional), `int`, `float`, `bool`, `date`, `fk`, `rel`.
-- Example usage:
-  - `fs add category name:str news:rel=news`
-  - `fs add news title:str date:date body views:int category_id:fk=category.id`
+Centralized configurations for services and app initialization:
 
-In the first example, a blueprint named 'category' will be created with the a `str` field 'name' and a relationship with the model 'news'.
+- `__init__.py` – Loads the app configuration.
+- `celery.py` – Celery configuration (e.g., broker URL, task settings).
+- `db.py` – SQLAlchemy database configuration.
+- `jwt.py` – JWT token creation, validation, and expiry management.
+- `mail.py` – SMTP and email notification configuration.
 
-In the second example, a blueprint named 'news' will be created with the specified model fields. Note that the `str` field type for `body` is optional and has been omitted.
+---
 
-### remove
+### `helpers/` – Utility Functions and API Integrations
 
-This will remove the blueprint named 'api' from the project.
+Reusable modules for third-party integrations and shared functionality:
 
-```python
-fs remove api
-```
+- `africastalking.py` – Sends SMS via Africa’s Talking.
+- `area_list.py` – Contains static or fetched geographic area names.
+- `langchain.py` – AI integration using Langchain (e.g., OpenAI API).
+- `twilio.py` – Sends WhatsApp messages via Twilio.
+- `upload.py` – File upload utilities (e.g., cloud or local storage).
 
-### install
+---
 
-This will install the specified module "flask" and freeze it to the requirements file.
+### `migrations/` – Alembic Migrations
 
-```python
-fs install flask
-```
+Manages schema migrations for the database:
 
-### uninstall
+- `alembic.ini`, `env.py`, `script.py.mako` – Alembic’s core config files.
+- `versions/` – Auto-generated Python scripts that track and apply schema changes.
 
-This will uninstall the specified module "flask" and remove it from the freeze requirements file.
+---
 
-```python
-fs uninstall flask
-```
+## 🧪 Technologies Used
 
-### start
+- **Python + Flask** – Core web framework
+- **PostgreSQL** – Relational database
+- **SQLAlchemy + Alembic** – ORM and schema migration
+- **Celery + Redis** – Background task processing
+- **Twilio / Africa’s Talking** – Messaging integrations
+- **Langchain** – AI interaction layer
+- **Docker** – Containerization
+- **Supervisor** – Production process manager
 
-This will start the server.
+---
 
-```python
-fs start
-```
+## 🛠 Setup Instructions (Basic)
 
-## Model Changes
+1. **Clone the repository**:
 
-> [!Note]
-> To create database tables or apply model changes, perform the following database migration and upgrade steps:
+   ```bash
+   git clone https://github.com/your-org/connected-ltd-connected-api.git
+   cd connected-ltd-connected-api
+   ```
 
-```python
-flask db migrate -m "migration message"
-```
+2. **Configure environment variables**:
+   Create a `.env` file or set up your config file to load secrets (JWT keys, DB URL, etc.).
 
-```python
-flask db upgrade
-```
+3. **Run with Docker**:
+
+   ```bash
+   docker build -t connected-api .
+   docker run -p 5000:5000 connected-api
+   ```
+
+4. **Run migrations**:
+   ```bash
+   flask db upgrade
+   ```
+
+---
+
+## 👨‍💻 Contribution Guide
+
+- Write clean, modular code.
+- Use type hints and docstrings.
+- Follow the existing `controller-model-schema` structure.
+- Write tests where possible.
+
+---
+
+## 📄 License
+
+This project is currently **proprietary**, but is scheduled to be released under the **Apache 2.0 License** in Q3 2025.
+
+---
