@@ -22,7 +22,7 @@ The project follows a modular structure to organize routes, models, and schemas 
 
 - **`supervisord.conf`**: Configuration file for Supervisor to manage and auto-restart the backend process.
 
-- **`.fs`**: Specifies Python package dependencies using [Flox](https://flox.dev/) or a similar package manager, as an alternative to `requirements.txt`.
+- **`.fs`**: Specifies Python package dependencies, an alternative to `requirements.txt`.
 
 ---
 
@@ -107,38 +107,113 @@ Manages schema migrations for the database:
 
 ---
 
+## 🚀 Deployment Note
+
+This application is deployed using **CapRover**. Configure your CapRover instance with the Dockerfile provided in the root directory.
+
+---
+
+# 🧰 Flask-Setup Tool
+
+This project was initially scaffolded using [Flask-Setup](https://pypi.org/project/flask-setup/), an open-source CLI tool that accelerates Flask project setup and CRUD blueprint generation.
+
+With a single `fs` command, you can generate project structure, blueprints, and models instantly.
+
+## 📦 Installation
+
+Ensure [Python](https://www.python.org/downloads/) is installed, then run:
+
+```bash
+pip install flask-setup
+```
+
+## 🔁 Upgrade
+
+To upgrade Flask-Setup to the latest version:
+
+```bash
+pip install --upgrade flask-setup
+```
+
+## ⚙️ Usage
+
+Use the `fs` command in your terminal:
+
+Available commands:
+
+- `fs build projectname` – Creates a new Flask project.
+- `fs init` – Initializes `.fs` config file in an existing project.
+- `fs add blueprint_name field:type ...` – Adds a new blueprint with fields.
+- `fs remove blueprint_name` – Removes a blueprint.
+- `fs install module` – Installs a module and freezes it.
+- `fs uninstall module` – Uninstalls a module.
+- `fs start` – Starts the Flask development server.
+
+### 🧪 Example Add Commands
+
+```bash
+fs add category name:str news:rel=news
+fs add news title:str date:date body views:int category_id:fk=category.id
+```
+
+## 🛠 Model Changes
+
+To apply model changes with Alembic:
+
+```bash
+flask db migrate -m "Add new fields"
+flask db upgrade
+```
+
 ## 🛠 Setup Instructions (Basic)
 
 1. **Clone the repository**:
 
    ```bash
-   git clone https://github.com/your-org/connected-ltd-connected-api.git
-   cd connected-ltd-connected-api
+   git clone https://github.com/connected-ltd/connected-api.git
+   cd connected-api
    ```
 
 2. **Configure environment variables**:
    Create a `.env` file or set up your config file to load secrets (JWT keys, DB URL, etc.).
 
-3. **Run with Docker**:
+3. **Create a virtual environment**:
 
    ```bash
-   docker build -t connected-api .
-   docker run -p 5000:5000 connected-api
+   python3 -m venv venv
+   source venv/bin/activate
    ```
 
-4. **Run migrations**:
+4. **Run `fs install`**:
+
+   ```bash
+   fs install
+   ```
+
+5. **Run `fs start`**:
+
+   ```bash
+   fs start
+   ```
+
+6. **Run migrations**:
+
    ```bash
    flask db upgrade
    ```
 
----
+7. **Run the Redis server**:
+   Open another terminal and start the Redis server:
 
-## 👨‍💻 Contribution Guide
+   ```bash
+   redis-server
+   ```
 
-- Write clean, modular code.
-- Use type hints and docstrings.
-- Follow the existing `controller-model-schema` structure.
-- Write tests where possible.
+8. **Run with Docker**:
+   ```bash
+   docker build -t connected-api .
+   docker run -p 5050:5050 connected-api
+   ```
 
 ---
 
