@@ -29,34 +29,23 @@ class CreditPoints(db.Model):
     def deduct_credits(self, amount, service_type=None):
         """Deduct credits and log usage"""
         if self.balance < amount:
-            # This case should not be happening based on the debug logs (90.0 < 0.6 is false)
-            print(f"DEBUG: deduct_credits returning False due to self.balance ({self.balance}) < amount ({amount})")
             return False, None
         
         try:
-            # Start transaction
             self.balance -= amount
             self.updated_at = db.func.now()
             
-            # Log the usage
-            print(f"DEBUG: Attempting to create CreditUsage: user_id={self.user_id}, amount={amount}, service_type={service_type}")
             usage = CreditUsage.create(
                 user_id=self.user_id,
                 amount=amount,
                 service_type=service_type
             )
-            print(f"DEBUG: CreditUsage created successfully: id={usage.id if usage else 'None'}")
             
             db.session.commit()
-            print("DEBUG: deduct_credits main db.session.commit() successful")
             return True, usage
             
-        except Exception as e:
-            print(f"DEBUG: Exception in deduct_credits: {str(e)}") # Add this line to print the exception
-            import traceback
-            print(f"DEBUG: Traceback: {traceback.format_exc()}")   # Add this for full traceback
+        except Exception:
             db.session.rollback()
-            print("DEBUG: deduct_credits db.session.rollback() executed due to exception")
             return False, None
 
     def refund_credits(self, amount, usage_id):
@@ -84,15 +73,17 @@ class CreditTransaction(db.Model):
     amount = db.Column(db.Float, nullable=False)
     reference = db.Column(db.String(100), unique=True)  # Paystack reference
     status = db.Column(db.String(20), nullable=False, default='pending')  # pending, success, failed
+    transaction_type = db.Column(db.String(20), nullable=False)  # add, deduct
     created_at = db.Column(db.DateTime, nullable=False, default=db.func.now())
     is_deleted = db.Column(db.Boolean, nullable=False, default=False)
 
     @classmethod
-    def create(cls, user_id, amount, reference):
+    def create(cls, user_id, amount, reference, transaction_type):
         transaction = cls(
             user_id=user_id,
             amount=amount,
-            reference=reference
+            reference=reference,
+            transaction_type=transaction_type
         )
         db.session.add(transaction)
         db.session.commit()

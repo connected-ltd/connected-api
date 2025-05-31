@@ -9,7 +9,7 @@ from app.numbers.schema import *
 from app.numbers.model import *
 from app.shortcodes.model import *
 from app.files.model import *
-from app.credit.model import CreditPoints, CreditUsage
+from app.credit.model import CreditPoints, CreditUsage, CreditTransaction
 from app.credit.schema import CreditUsageSchema
 from helpers.africastalking import AfricasTalking
 from helpers.twilio import send_twilio_message
@@ -18,7 +18,7 @@ from helpers.langchain import qa_chain
 bp = Blueprint('messages', __name__)
 
 # Cost per message in credits
-BROADCAST_CREDIT_COST = 1
+BROADCAST_CREDIT_COST = 0.5
 RESPONSE_CREDIT_COST = 1
 @bp.post('/broadcast')
 @auth_required()
@@ -50,12 +50,6 @@ def create_messages():
             amount=total_credits,
             service_type='broadcast'
         )
-        
-        # DEBUGGING: Print result of deduction
-        print(f"DEBUG: Deduction success: {success}")
-        if usage:
-            print(f"DEBUG: Usage record ID: {usage.id}, Amount: {usage.amount}, Service Type: {usage.service_type}, Is Refunded: {usage.is_refunded}")
-
         
         if not success:
             return {'message': 'Insufficient credits', 'status': 'failed'}, 400
