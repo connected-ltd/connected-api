@@ -30,7 +30,7 @@ def create_files():
         print("User id: ", g.user.id)
         fileData = Files.create(file.filename, g.user.id)
         return {'data':FilesSchema().dump(fileData), 'message': 'Files created successfully', 'status':'success'}, 201
-    return {'message': 'No file was supplied', 'status':'failed'}, 401
+    return {'message': 'No file was supplied', 'status':'failed'}, 500
 
     
 
@@ -49,7 +49,7 @@ def create_whatsapp_files():
         print("User id: ", g.user.id)
         fileData = Files.create(file.filename, g.user.id)
         return {'data':FilesSchema().dump(fileData), 'message': 'Files created successfully', 'status':'success'}, 201
-    return {'message': 'No file was supplied', 'status':'failed'}, 401
+    return {'message': 'No file was supplied', 'status':'failed'}, 500
 # TODO: Test this endpoint later
         
 
