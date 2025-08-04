@@ -14,6 +14,7 @@ from app.credit.schema import CreditUsageSchema
 from helpers.africastalking import AfricasTalking
 from helpers.twilio import send_twilio_message
 from helpers.langchain import qa_chain
+from app.analytics.service import AnalyticsService
 
 bp = Blueprint('messages', __name__)
 
@@ -134,6 +135,13 @@ def respond_to_message():
         number_exists = Numbers.check_if_number_exists(sender_number)
         user_language = Numbers.get_language_by_number(sender_number)
 
+        # Track this query in analytics
+        AnalyticsService.process_query(
+            query_text=appended_message,
+            user_id=shortcode_obj.user_id,
+            source='sms'
+        )
+        
         try:
             if number_exists:
                 answer = qa_chain(appended_message, chat_history, shortcode, user_language)
@@ -179,6 +187,16 @@ def twilio_response():
         
         formatted_sender_number = sender_number.split(':')[1].strip()
         formatted_recipient_number = recipient_number.split('+')[1].strip()
+        
+        # Track this query in analytics
+        # Find the shortcode/user info
+        shortcode_obj = Shortcodes.get_by_shortcode(formatted_recipient_number)
+        if shortcode_obj:
+            AnalyticsService.process_query(
+                query_text=appended_message,
+                user_id=shortcode_obj.user_id,
+                source='whatsapp'
+            )
         
         number_exists = Numbers.check_if_number_exists(formatted_sender_number)
         user_language = Numbers.get_language_by_number(formatted_sender_number)

@@ -44,6 +44,8 @@ from app.whatsapp_number.controller import bp as whatsapp_number_bp
 app.register_blueprint(whatsapp_number_bp)
 from app.credit.controller import bp as credit_bp
 app.register_blueprint(credit_bp)
+from app.analytics.controller import bp as analytics_bp
+app.register_blueprint(analytics_bp)
 
 # Error handlers
 from .error_handlers import *

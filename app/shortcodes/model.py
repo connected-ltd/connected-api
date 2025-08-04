@@ -31,6 +31,10 @@ class Shortcodes(db.Model):
         return cls.query.filter_by(id=id, is_deleted=False).first()
     
     @classmethod
+    def get_by_shortcode(cls, shortcode):
+        return cls.query.filter_by(shortcode=shortcode, is_deleted=False).first()
+    
+    @classmethod
     def get_by_user_id(cls, user_id):
         return cls.query.filter_by(user_id=user_id, is_deleted=False).first()
     

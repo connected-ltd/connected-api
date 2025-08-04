@@ -23,3 +23,17 @@ def auth_required(*roles_required):
             return f(*args, **kwargs)
         return decorated
     return requires_auth
+
+def admin_required():
+    def requires_admin(f):
+        @wraps(f)
+        def decorated(*args, **kwargs):
+            verify_jwt_in_request()
+            claims = get_jwt()
+            # Check if the user has admin or super_admin role
+            if claims.get('role') not in ['admin', 'super_admin']:
+                return jsonify({"message": "Admin privileges required"}), 403
+            g.user = User.get_by_id(get_jwt_identity())
+            return f(*args, **kwargs)
+        return decorated
+    return requires_admin
