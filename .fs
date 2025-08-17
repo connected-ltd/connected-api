@@ -16,523 +16,529 @@
             "version": "1.13.2",
             "dependencies": [
                 {
-                    "name": "Mako"
+                    "name": "Mako",
+                    "version": "1.3.10"
                 },
                 {
-                    "name": "SQLAlchemy"
+                    "name": "SQLAlchemy",
+                    "version": "2.0.41"
                 },
                 {
-                    "name": "typing-extensions"
+                    "name": "typing-extensions",
+                    "version": "4.13.2"
                 }
-            ],
-            "timestamp": "2024-09-10 00:41:18"
+            ]
         },
         {
             "name": "amqp",
             "version": "5.2.0",
             "dependencies": [
                 {
-                    "name": "vine"
+                    "name": "vine",
+                    "version": "5.1.0"
                 }
-            ],
-            "timestamp": "2024-09-10 00:41:19"
+            ]
         },
         {
             "name": "bcrypt",
             "version": "4.2.0",
-            "dependencies": [],
-            "timestamp": "2024-09-10 00:41:19"
+            "dependencies": []
         },
         {
             "name": "billiard",
             "version": "4.2.0",
-            "dependencies": [],
-            "timestamp": "2024-09-10 00:41:20"
+            "dependencies": []
         },
         {
             "name": "blinker",
             "version": "1.8.2",
-            "dependencies": [],
-            "timestamp": "2024-09-10 00:41:21"
+            "dependencies": []
         },
         {
             "name": "celery",
             "version": "5.4.0",
             "dependencies": [
                 {
-                    "name": "billiard"
+                    "name": "billiard",
+                    "version": "4.2.0"
                 },
                 {
-                    "name": "click"
+                    "name": "click",
+                    "version": "8.1.8"
                 },
                 {
-                    "name": "click-didyoumean"
+                    "name": "click-didyoumean",
+                    "version": "0.3.1"
                 },
                 {
-                    "name": "click-plugins"
+                    "name": "click-plugins",
+                    "version": "1.1.1"
                 },
                 {
-                    "name": "click-repl"
+                    "name": "click-repl",
+                    "version": "0.3.0"
                 },
                 {
-                    "name": "kombu"
+                    "name": "kombu",
+                    "version": "5.5.3"
                 },
                 {
-                    "name": "python-dateutil"
+                    "name": "python-dateutil",
+                    "version": "2.9.0.post0"
                 },
                 {
-                    "name": "tzdata"
+                    "name": "tzdata",
+                    "version": "2025.2"
                 },
                 {
-                    "name": "vine"
+                    "name": "vine",
+                    "version": "5.1.0"
                 }
-            ],
-            "timestamp": "2024-09-10 00:41:22"
+            ]
         },
         {
             "name": "certifi",
             "version": "2024.8.30",
-            "dependencies": [],
-            "timestamp": "2024-09-10 00:41:22"
+            "dependencies": []
         },
         {
             "name": "charset-normalizer",
             "version": "3.3.2",
-            "dependencies": [],
-            "timestamp": "2024-09-10 00:41:23"
+            "dependencies": []
         },
         {
             "name": "click",
             "version": "8.1.7",
-            "dependencies": [
-                {
-                    "name": "colorama"
-                }
-            ],
-            "timestamp": "2024-09-10 00:41:24"
+            "dependencies": []
         },
         {
             "name": "click-didyoumean",
             "version": "0.3.1",
             "dependencies": [
                 {
-                    "name": "click"
+                    "name": "click",
+                    "version": "8.1.7"
                 }
-            ],
-            "timestamp": "2024-09-10 00:41:24"
+            ]
         },
         {
             "name": "click-plugins",
             "version": "1.1.1",
             "dependencies": [
                 {
-                    "name": "click"
+                    "name": "click",
+                    "version": "8.1.7"
                 }
-            ],
-            "timestamp": "2024-09-10 00:41:25"
+            ]
         },
         {
             "name": "click-repl",
             "version": "0.3.0",
             "dependencies": [
                 {
-                    "name": "click"
+                    "name": "click",
+                    "version": "8.1.7"
                 },
                 {
-                    "name": "prompt-toolkit"
+                    "name": "prompt-toolkit",
+                    "version": "3.0.51"
                 }
-            ],
-            "timestamp": "2024-09-10 00:41:26"
+            ]
         },
         {
             "name": "colorama",
             "version": "0.4.6",
-            "dependencies": [],
-            "timestamp": "2024-09-10 00:41:27"
+            "dependencies": []
         },
         {
-            "name": "Flask",
+            "name": "flask",
             "version": "3.0.3",
             "dependencies": [
                 {
-                    "name": "blinker"
+                    "name": "blinker",
+                    "version": "1.8.2"
                 },
                 {
-                    "name": "click"
+                    "name": "click",
+                    "version": "8.1.7"
                 },
                 {
-                    "name": "itsdangerous"
+                    "name": "itsdangerous",
+                    "version": "2.2.0"
                 },
                 {
-                    "name": "Jinja2"
+                    "name": "Jinja2",
+                    "version": "3.1.4"
                 },
                 {
-                    "name": "Werkzeug"
+                    "name": "Werkzeug",
+                    "version": "3.0.4"
                 }
-            ],
-            "timestamp": "2024-09-10 00:41:27"
+            ]
         },
         {
             "name": "Flask-Cors",
             "version": "4.0.1",
             "dependencies": [
                 {
-                    "name": "Flask"
+                    "name": "Flask",
+                    "version": "3.0.3"
                 }
-            ],
-            "timestamp": "2024-09-10 00:41:28"
+            ]
         },
         {
             "name": "Flask-JWT-Extended",
             "version": "4.6.0",
             "dependencies": [
                 {
-                    "name": "Flask"
+                    "name": "Flask",
+                    "version": "3.0.3"
                 },
                 {
-                    "name": "PyJWT"
+                    "name": "PyJWT",
+                    "version": "2.10.1"
                 },
                 {
-                    "name": "Werkzeug"
+                    "name": "Werkzeug",
+                    "version": "3.1.3"
                 }
-            ],
-            "timestamp": "2024-09-10 00:41:29"
+            ]
         },
         {
             "name": "flask-marshmallow",
             "version": "1.2.1",
             "dependencies": [
                 {
-                    "name": "Flask"
+                    "name": "Flask",
+                    "version": "3.0.3"
                 },
                 {
-                    "name": "marshmallow"
+                    "name": "marshmallow",
+                    "version": "4.0.0"
                 }
-            ],
-            "timestamp": "2024-09-10 00:41:29"
+            ]
         },
         {
             "name": "Flask-Migrate",
             "version": "4.0.7",
             "dependencies": [
                 {
-                    "name": "alembic"
+                    "name": "alembic",
+                    "version": "1.13.2"
                 },
                 {
-                    "name": "Flask"
+                    "name": "Flask",
+                    "version": "3.0.3"
                 },
                 {
-                    "name": "Flask-SQLAlchemy"
+                    "name": "Flask-SQLAlchemy",
+                    "version": "3.1.1"
                 }
-            ],
-            "timestamp": "2024-09-10 00:41:30"
+            ]
         },
         {
             "name": "flask-setup",
             "version": "0.7",
             "dependencies": [
                 {
-                    "name": "typer"
+                    "name": "typer",
+                    "version": "0.15.4"
                 }
-            ],
-            "timestamp": "2024-09-10 00:41:31"
+            ]
         },
         {
             "name": "Flask-SQLAlchemy",
             "version": "3.1.1",
             "dependencies": [
                 {
-                    "name": "flask"
+                    "name": "flask",
+                    "version": "3.0.3"
                 },
                 {
-                    "name": "sqlalchemy"
+                    "name": "sqlalchemy",
+                    "version": "2.0.41"
                 }
-            ],
-            "timestamp": "2024-09-10 00:41:32"
+            ]
         },
         {
             "name": "greenlet",
             "version": "3.0.3",
-            "dependencies": [],
-            "timestamp": "2024-09-10 00:41:32"
+            "dependencies": []
         },
         {
             "name": "gunicorn",
             "version": "22.0.0",
             "dependencies": [
                 {
-                    "name": "packaging"
+                    "name": "packaging",
+                    "version": "25.0"
                 }
-            ],
-            "timestamp": "2024-09-10 00:41:33"
+            ]
         },
         {
             "name": "idna",
             "version": "3.8",
-            "dependencies": [],
-            "timestamp": "2024-09-10 00:41:34"
+            "dependencies": []
         },
         {
             "name": "itsdangerous",
             "version": "2.2.0",
-            "dependencies": [],
-            "timestamp": "2024-09-10 00:41:35"
+            "dependencies": []
         },
         {
             "name": "Jinja2",
             "version": "3.1.4",
             "dependencies": [
                 {
-                    "name": "MarkupSafe"
+                    "name": "MarkupSafe",
+                    "version": "3.0.2"
                 }
-            ],
-            "timestamp": "2024-09-10 00:41:35"
+            ]
         },
         {
             "name": "kombu",
             "version": "5.4.0",
             "dependencies": [
                 {
-                    "name": "amqp"
+                    "name": "amqp",
+                    "version": "5.2.0"
                 },
                 {
-                    "name": "vine"
+                    "name": "vine",
+                    "version": "5.1.0"
                 }
-            ],
-            "timestamp": "2024-09-10 00:41:36"
+            ]
         },
         {
             "name": "Mako",
             "version": "1.3.5",
             "dependencies": [
                 {
-                    "name": "MarkupSafe"
+                    "name": "MarkupSafe",
+                    "version": "3.0.2"
                 }
-            ],
-            "timestamp": "2024-09-10 00:41:37"
+            ]
         },
         {
             "name": "markdown-it-py",
             "version": "3.0.0",
             "dependencies": [
                 {
-                    "name": "mdurl"
+                    "name": "mdurl",
+                    "version": "0.1.2"
                 }
-            ],
-            "timestamp": "2024-09-10 00:41:38"
+            ]
         },
         {
             "name": "MarkupSafe",
             "version": "2.1.5",
-            "dependencies": [],
-            "timestamp": "2024-09-10 00:41:38"
+            "dependencies": []
         },
         {
             "name": "marshmallow",
             "version": "3.22.0",
             "dependencies": [
                 {
-                    "name": "packaging"
+                    "name": "packaging",
+                    "version": "25.0"
                 }
-            ],
-            "timestamp": "2024-09-10 00:41:39"
+            ]
         },
         {
             "name": "marshmallow-sqlalchemy",
             "version": "1.0.0",
             "dependencies": [
                 {
-                    "name": "marshmallow"
+                    "name": "marshmallow",
+                    "version": "3.22.0"
                 },
                 {
-                    "name": "SQLAlchemy"
+                    "name": "SQLAlchemy",
+                    "version": "2.0.41"
                 }
-            ],
-            "timestamp": "2024-09-10 00:41:40"
+            ]
         },
         {
             "name": "mdurl",
             "version": "0.1.2",
-            "dependencies": [],
-            "timestamp": "2024-09-10 00:41:41"
+            "dependencies": []
         },
         {
             "name": "packaging",
             "version": "24.1",
-            "dependencies": [],
-            "timestamp": "2024-09-10 00:41:41"
+            "dependencies": []
         },
         {
             "name": "pip",
             "version": "24.2",
-            "dependencies": [],
-            "timestamp": "2024-09-10 00:41:42"
+            "dependencies": []
         },
         {
             "name": "prompt_toolkit",
             "version": "3.0.47",
             "dependencies": [
                 {
-                    "name": "wcwidth"
+                    "name": "wcwidth",
+                    "version": "0.2.13"
                 }
-            ],
-            "timestamp": "2024-09-10 00:41:43"
+            ]
         },
         {
             "name": "psycopg2-binary",
             "version": "2.9.9",
-            "dependencies": [],
-            "timestamp": "2024-09-10 00:41:44"
+            "dependencies": []
         },
         {
             "name": "Pygments",
             "version": "2.18.0",
-            "dependencies": [],
-            "timestamp": "2024-09-10 00:41:46"
+            "dependencies": []
         },
         {
             "name": "PyJWT",
             "version": "2.9.0",
-            "dependencies": [],
-            "timestamp": "2024-09-10 00:41:47"
+            "dependencies": []
         },
         {
             "name": "python-dateutil",
             "version": "2.9.0.post0",
             "dependencies": [
                 {
-                    "name": "six"
+                    "name": "six",
+                    "version": "1.17.0"
                 }
-            ],
-            "timestamp": "2024-09-10 00:41:48"
+            ]
         },
         {
             "name": "python-dotenv",
             "version": "1.0.1",
-            "dependencies": [],
-            "timestamp": "2024-09-10 00:41:49"
+            "dependencies": []
         },
         {
             "name": "redis",
             "version": "5.0.8",
-            "dependencies": [],
-            "timestamp": "2024-09-10 00:41:51"
+            "dependencies": [
+                {
+                    "name": "async-timeout",
+                    "version": "5.0.1"
+                }
+            ]
         },
         {
             "name": "requests",
             "version": "2.32.3",
             "dependencies": [
                 {
-                    "name": "certifi"
+                    "name": "certifi",
+                    "version": "2024.8.30"
                 },
                 {
-                    "name": "charset-normalizer"
+                    "name": "charset-normalizer",
+                    "version": "3.3.2"
                 },
                 {
-                    "name": "idna"
+                    "name": "idna",
+                    "version": "3.8"
                 },
                 {
-                    "name": "urllib3"
+                    "name": "urllib3",
+                    "version": "2.4.0"
                 }
-            ],
-            "timestamp": "2024-09-10 00:41:52"
+            ]
         },
         {
             "name": "rich",
             "version": "13.8.0",
             "dependencies": [
                 {
-                    "name": "markdown-it-py"
+                    "name": "markdown-it-py",
+                    "version": "3.0.0"
                 },
                 {
-                    "name": "pygments"
+                    "name": "pygments",
+                    "version": "2.18.0"
                 }
-            ],
-            "timestamp": "2024-09-10 00:41:53"
+            ]
         },
         {
             "name": "shellingham",
             "version": "1.5.4",
-            "dependencies": [],
-            "timestamp": "2024-09-10 00:41:54"
+            "dependencies": []
         },
         {
             "name": "six",
             "version": "1.16.0",
-            "dependencies": [],
-            "timestamp": "2024-09-10 00:41:54"
+            "dependencies": []
         },
         {
             "name": "SQLAlchemy",
             "version": "2.0.34",
             "dependencies": [
                 {
-                    "name": "greenlet"
+                    "name": "greenlet",
+                    "version": "3.0.3"
                 },
                 {
-                    "name": "typing-extensions"
+                    "name": "typing-extensions",
+                    "version": "4.13.2"
                 }
-            ],
-            "timestamp": "2024-09-10 00:41:55"
+            ]
         },
         {
             "name": "typer",
             "version": "0.12.5",
             "dependencies": [
                 {
-                    "name": "click"
+                    "name": "click",
+                    "version": "8.1.7"
                 },
                 {
-                    "name": "rich"
+                    "name": "rich",
+                    "version": "13.8.0"
                 },
                 {
-                    "name": "shellingham"
+                    "name": "shellingham",
+                    "version": "1.5.4"
                 },
                 {
-                    "name": "typing-extensions"
+                    "name": "typing-extensions",
+                    "version": "4.13.2"
                 }
-            ],
-            "timestamp": "2024-09-10 00:41:56"
+            ]
         },
         {
             "name": "typing_extensions",
             "version": "4.12.2",
-            "dependencies": [],
-            "timestamp": "2024-09-10 00:41:57"
+            "dependencies": []
         },
         {
             "name": "tzdata",
             "version": "2024.1",
-            "dependencies": [],
-            "timestamp": "2024-09-10 00:41:58"
+            "dependencies": []
         },
         {
             "name": "urllib3",
             "version": "2.2.2",
-            "dependencies": [],
-            "timestamp": "2024-09-10 00:41:58"
+            "dependencies": []
         },
         {
             "name": "vine",
             "version": "5.1.0",
-            "dependencies": [],
-            "timestamp": "2024-09-10 00:41:59"
+            "dependencies": []
         },
         {
             "name": "wcwidth",
             "version": "0.2.13",
-            "dependencies": [],
-            "timestamp": "2024-09-10 00:42:00"
+            "dependencies": []
         },
         {
             "name": "Werkzeug",
             "version": "3.0.4",
             "dependencies": [
                 {
-                    "name": "MarkupSafe"
+                    "name": "MarkupSafe",
+                    "version": "2.1.5"
                 }
-            ],
-            "timestamp": "2024-09-10 00:42:01"
+            ]
         },
         {
             "name": "flask",
@@ -561,13 +567,14 @@
             "version": "1.2.8",
             "dependencies": [
                 {
-                    "name": "requests"
+                    "name": "requests",
+                    "version": "2.32.3"
                 },
                 {
-                    "name": "schema"
+                    "name": "schema",
+                    "version": "0.7.7"
                 }
-            ],
-            "timestamp": "2024-09-11 23:42:40"
+            ]
         },
         {
             "name": "africastalking",
@@ -587,344 +594,411 @@
             "version": "4.8.1",
             "dependencies": [
                 {
-                    "name": "authlib"
+                    "name": "authlib",
+                    "version": "1.3.1"
                 },
                 {
-                    "name": "grpcio"
+                    "name": "grpcio",
+                    "version": "1.71.0"
                 },
                 {
-                    "name": "grpcio-health-checking"
+                    "name": "grpcio-health-checking",
+                    "version": "1.71.0"
                 },
                 {
-                    "name": "grpcio-tools"
+                    "name": "grpcio-tools",
+                    "version": "1.71.0"
                 },
                 {
-                    "name": "httpx"
+                    "name": "httpx",
+                    "version": "0.27.0"
                 },
                 {
-                    "name": "pydantic"
+                    "name": "pydantic",
+                    "version": "2.11.4"
                 },
                 {
-                    "name": "requests"
+                    "name": "requests",
+                    "version": "2.32.3"
                 },
                 {
-                    "name": "validators"
+                    "name": "validators",
+                    "version": "0.34.0"
                 }
-            ],
-            "timestamp": "2024-09-15 10:58:23"
+            ]
         },
         {
             "name": "pypdf",
             "version": "5.0.0",
-            "dependencies": [],
-            "timestamp": "2024-09-21 21:22:48"
+            "dependencies": [
+                {
+                    "name": "typing_extensions",
+                    "version": "4.12.2"
+                }
+            ]
         },
         {
             "name": "python-docx",
             "version": "1.1.2",
             "dependencies": [
                 {
-                    "name": "lxml"
+                    "name": "lxml",
+                    "version": "5.4.0"
                 },
                 {
-                    "name": "typing-extensions"
+                    "name": "typing-extensions",
+                    "version": "4.12.2"
                 }
-            ],
-            "timestamp": "2024-09-22 14:20:04"
+            ]
         },
         {
             "name": "boto3",
             "version": "1.35.32",
             "dependencies": [
                 {
-                    "name": "botocore"
+                    "name": "botocore",
+                    "version": "1.35.99"
                 },
                 {
-                    "name": "jmespath"
+                    "name": "jmespath",
+                    "version": "1.0.1"
                 },
                 {
-                    "name": "s3transfer"
+                    "name": "s3transfer",
+                    "version": "0.10.4"
                 }
-            ],
-            "timestamp": "2024-10-03 16:15:40"
+            ]
         },
         {
             "name": "unstructured",
             "version": "0.15.13",
             "dependencies": [
                 {
-                    "name": "backoff"
+                    "name": "backoff",
+                    "version": "2.2.1"
                 },
                 {
-                    "name": "beautifulsoup4"
+                    "name": "beautifulsoup4",
+                    "version": "4.13.4"
                 },
                 {
-                    "name": "chardet"
+                    "name": "chardet",
+                    "version": "5.2.0"
                 },
                 {
-                    "name": "dataclasses-json"
+                    "name": "dataclasses-json",
+                    "version": "0.6.7"
                 },
                 {
-                    "name": "emoji"
+                    "name": "emoji",
+                    "version": "2.14.1"
                 },
                 {
-                    "name": "filetype"
+                    "name": "filetype",
+                    "version": "1.2.0"
                 },
                 {
-                    "name": "langdetect"
+                    "name": "langdetect",
+                    "version": "1.0.9"
                 },
                 {
-                    "name": "lxml"
+                    "name": "lxml",
+                    "version": "5.4.0"
                 },
                 {
-                    "name": "nltk"
+                    "name": "nltk",
+                    "version": "3.9.1"
                 },
                 {
-                    "name": "numpy"
+                    "name": "numpy",
+                    "version": "1.26.4"
                 },
                 {
-                    "name": "psutil"
+                    "name": "psutil",
+                    "version": "7.0.0"
                 },
                 {
-                    "name": "python-iso639"
+                    "name": "python-iso639",
+                    "version": "2025.2.18"
                 },
                 {
-                    "name": "python-magic"
+                    "name": "python-magic",
+                    "version": "0.4.27"
                 },
                 {
-                    "name": "python-oxmsg"
+                    "name": "python-oxmsg",
+                    "version": "0.0.2"
                 },
                 {
-                    "name": "rapidfuzz"
+                    "name": "rapidfuzz",
+                    "version": "3.13.0"
                 },
                 {
-                    "name": "requests"
+                    "name": "requests",
+                    "version": "2.32.3"
                 },
                 {
-                    "name": "tabulate"
+                    "name": "tabulate",
+                    "version": "0.9.0"
                 },
                 {
-                    "name": "tqdm"
+                    "name": "tqdm",
+                    "version": "4.67.1"
                 },
                 {
-                    "name": "typing-extensions"
+                    "name": "typing-extensions",
+                    "version": "4.12.2"
                 },
                 {
-                    "name": "unstructured-client"
+                    "name": "unstructured-client",
+                    "version": "0.35.0"
                 },
                 {
-                    "name": "wrapt"
+                    "name": "wrapt",
+                    "version": "1.17.2"
                 }
-            ],
-            "timestamp": "2024-10-03 16:23:01"
+            ]
         },
         {
             "name": "pdfminer",
             "version": "20191125",
             "dependencies": [
                 {
-                    "name": "pycryptodome"
+                    "name": "pycryptodome",
+                    "version": "3.22.0"
                 }
-            ],
-            "timestamp": "2024-10-03 16:26:18"
+            ]
         },
         {
             "name": "pdfminer.six",
             "version": "20240706",
             "dependencies": [
                 {
-                    "name": "charset-normalizer"
+                    "name": "charset-normalizer",
+                    "version": "3.3.2"
                 },
                 {
-                    "name": "cryptography"
+                    "name": "cryptography",
+                    "version": "44.0.3"
                 }
-            ],
-            "timestamp": "2024-10-03 16:27:53"
+            ]
         },
         {
             "name": "pi_heif",
             "version": "0.18.0",
             "dependencies": [
                 {
-                    "name": "pillow"
+                    "name": "pillow",
+                    "version": "11.2.1"
                 }
-            ],
-            "timestamp": "2024-10-03 16:29:06"
+            ]
         },
         {
             "name": "unstructured_inference",
             "version": "0.7.37",
             "dependencies": [
                 {
-                    "name": "huggingface-hub"
+                    "name": "huggingface-hub",
+                    "version": "0.31.2"
                 },
                 {
-                    "name": "layoutparser"
+                    "name": "layoutparser",
+                    "version": "0.3.4"
                 },
                 {
-                    "name": "matplotlib"
+                    "name": "matplotlib",
+                    "version": "3.10.3"
                 },
                 {
-                    "name": "numpy"
+                    "name": "numpy",
+                    "version": "1.26.4"
                 },
                 {
-                    "name": "onnx"
+                    "name": "onnx",
+                    "version": "1.18.0"
                 },
                 {
-                    "name": "onnxruntime"
+                    "name": "onnxruntime",
+                    "version": "1.22.0"
                 },
                 {
-                    "name": "opencv-python"
+                    "name": "opencv-python",
+                    "version": "4.11.0.86"
                 },
                 {
-                    "name": "python-multipart"
+                    "name": "python-multipart",
+                    "version": "0.0.20"
                 },
                 {
-                    "name": "rapidfuzz"
+                    "name": "rapidfuzz",
+                    "version": "3.13.0"
                 },
                 {
-                    "name": "timm"
+                    "name": "timm",
+                    "version": "1.0.15"
                 },
                 {
-                    "name": "torch"
+                    "name": "torch",
+                    "version": "2.7.0"
                 },
                 {
-                    "name": "transformers"
+                    "name": "transformers",
+                    "version": "4.51.3"
                 }
-            ],
-            "timestamp": "2024-10-03 16:46:56"
+            ]
         },
         {
             "name": "langchain_pinecone",
             "version": "0.2.0",
             "dependencies": [
                 {
-                    "name": "aiohttp"
+                    "name": "aiohttp",
+                    "version": "3.9.5"
                 },
                 {
-                    "name": "langchain-core"
+                    "name": "langchain-core",
+                    "version": "0.3.60"
                 },
                 {
-                    "name": "numpy"
+                    "name": "numpy",
+                    "version": "1.26.4"
                 },
                 {
-                    "name": "pinecone-client"
+                    "name": "pinecone-client",
+                    "version": "5.0.1"
                 }
-            ],
-            "timestamp": "2024-11-15 13:50:04"
+            ]
         },
         {
             "name": "langchain_community",
             "version": "0.3.7",
             "dependencies": [
                 {
-                    "name": "aiohttp"
+                    "name": "aiohttp",
+                    "version": "3.9.5"
                 },
                 {
-                    "name": "dataclasses-json"
+                    "name": "dataclasses-json",
+                    "version": "0.6.7"
                 },
                 {
-                    "name": "httpx-sse"
+                    "name": "httpx-sse",
+                    "version": "0.4.0"
                 },
                 {
-                    "name": "langchain"
+                    "name": "langchain",
+                    "version": "0.3.25"
                 },
                 {
-                    "name": "langchain-core"
+                    "name": "langchain-core",
+                    "version": "0.3.60"
                 },
                 {
-                    "name": "langsmith"
+                    "name": "langsmith",
+                    "version": "0.1.147"
                 },
                 {
-                    "name": "numpy"
+                    "name": "numpy",
+                    "version": "1.26.4"
                 },
                 {
-                    "name": "pydantic-settings"
+                    "name": "pydantic-settings",
+                    "version": "2.9.1"
                 },
                 {
-                    "name": "PyYAML"
+                    "name": "PyYAML",
+                    "version": "6.0.2"
                 },
                 {
-                    "name": "requests"
+                    "name": "requests",
+                    "version": "2.32.3"
                 },
                 {
-                    "name": "SQLAlchemy"
+                    "name": "SQLAlchemy",
+                    "version": "2.0.34"
                 },
                 {
-                    "name": "tenacity"
+                    "name": "tenacity",
+                    "version": "9.1.2"
                 }
-            ],
-            "timestamp": "2024-11-15 13:52:19"
+            ]
         },
         {
             "name": "googleapis-common-protos",
             "version": "1.65.0",
             "dependencies": [
                 {
-                    "name": "protobuf"
+                    "name": "protobuf",
+                    "version": "5.29.4"
                 }
-            ],
-            "timestamp": "2024-11-15 14:26:14"
+            ]
         },
         {
             "name": "grpcio",
-            "version": "1.66.1",
-            "dependencies": [],
-            "timestamp": "2024-11-15 14:27:40"
+            "version": "1.66.2",
+            "dependencies": []
         },
         {
             "name": "pinecone",
             "version": "5.3.1",
             "dependencies": [
                 {
-                    "name": "certifi"
+                    "name": "certifi",
+                    "version": "2024.8.30"
                 },
                 {
-                    "name": "pinecone-plugin-inference"
+                    "name": "pinecone-plugin-inference",
+                    "version": "1.1.0"
                 },
                 {
-                    "name": "pinecone-plugin-interface"
+                    "name": "pinecone-plugin-interface",
+                    "version": "0.0.7"
                 },
                 {
-                    "name": "python-dateutil"
+                    "name": "python-dateutil",
+                    "version": "2.9.0.post0"
                 },
                 {
-                    "name": "tqdm"
+                    "name": "tqdm",
+                    "version": "4.67.1"
                 },
                 {
-                    "name": "typing-extensions"
+                    "name": "typing-extensions",
+                    "version": "4.12.2"
                 },
                 {
-                    "name": "urllib3"
+                    "name": "urllib3",
+                    "version": "2.2.2"
                 }
-            ],
-            "timestamp": "2024-11-15 14:33:54"
+            ]
         },
         {
             "name": "pydantic",
-            "version": "2.9.1",
+            "version": "2.9.2",
             "dependencies": [
                 {
-                    "name": "annotated-types"
+                    "name": "annotated-types",
+                    "version": "0.7.0"
                 },
                 {
-                    "name": "pydantic-core"
+                    "name": "pydantic-core",
+                    "version": "2.23.4"
                 },
                 {
-                    "name": "typing-extensions"
+                    "name": "typing-extensions",
+                    "version": "4.12.2"
                 }
-            ],
-            "timestamp": "2024-11-15 14:43:25"
+            ]
         },
         {
             "name": "pydantic_core",
-            "version": "2.23.3",
+            "version": "2.23.4",
             "dependencies": [
                 {
-                    "name": "typing-extensions"
+                    "name": "typing-extensions",
+                    "version": "4.12.2"
                 }
-            ],
-            "timestamp": "2024-11-15 14:45:07"
+            ]
         },
         {
             "name": "googleapis-common-protos",
@@ -947,67 +1021,76 @@
             "version": "0.3.10",
             "dependencies": [
                 {
-                    "name": "jsonpatch"
+                    "name": "jsonpatch",
+                    "version": "1.33"
                 },
                 {
-                    "name": "langsmith"
+                    "name": "langsmith",
+                    "version": "0.1.147"
                 },
                 {
-                    "name": "packaging"
+                    "name": "packaging",
+                    "version": "24.1"
                 },
                 {
-                    "name": "pydantic"
+                    "name": "pydantic",
+                    "version": "2.9.1"
                 },
                 {
-                    "name": "PyYAML"
+                    "name": "PyYAML",
+                    "version": "6.0.2"
                 },
                 {
-                    "name": "tenacity"
+                    "name": "tenacity",
+                    "version": "8.5.0"
                 },
                 {
-                    "name": "typing-extensions"
+                    "name": "typing-extensions",
+                    "version": "4.12.2"
                 }
-            ],
-            "timestamp": "2024-11-15 20:10:21"
+            ]
         },
         {
             "name": "langchain-pinecone",
             "version": "0.2.0",
             "dependencies": [
                 {
-                    "name": "aiohttp"
+                    "name": "aiohttp",
+                    "version": "3.9.5"
                 },
                 {
-                    "name": "langchain-core"
+                    "name": "langchain-core",
+                    "version": "0.3.10"
                 },
                 {
-                    "name": "numpy"
+                    "name": "numpy",
+                    "version": "1.26.4"
                 },
                 {
-                    "name": "pinecone-client"
+                    "name": "pinecone-client",
+                    "version": "5.0.1"
                 }
-            ],
-            "timestamp": "2024-11-15 20:13:27"
+            ]
         },
         {
             "name": "langchain-text-splitters",
             "version": "0.3.0",
             "dependencies": [
                 {
-                    "name": "langchain-core"
+                    "name": "langchain-core",
+                    "version": "0.3.10"
                 }
-            ],
-            "timestamp": "2024-11-15 20:14:47"
+            ]
         },
         {
             "name": "langdetect",
             "version": "1.0.9",
             "dependencies": [
                 {
-                    "name": "six"
+                    "name": "six",
+                    "version": "1.16.0"
                 }
-            ],
-            "timestamp": "2024-11-15 20:15:19"
+            ]
         },
         {
             "name": "pinecone",
@@ -1042,13 +1125,14 @@
             "version": "0.0.1",
             "dependencies": [
                 {
-                    "name": "googleapis-common-protos"
+                    "name": "googleapis-common-protos",
+                    "version": "1.65.0"
                 },
                 {
-                    "name": "protobuf"
+                    "name": "protobuf",
+                    "version": "5.29.4"
                 }
-            ],
-            "timestamp": "2024-11-15 20:18:58"
+            ]
         },
         {
             "name": "pydantic",
@@ -1071,13 +1155,14 @@
             "version": "2.5.2",
             "dependencies": [
                 {
-                    "name": "pydantic"
+                    "name": "pydantic",
+                    "version": "2.9.2"
                 },
                 {
-                    "name": "python-dotenv"
+                    "name": "python-dotenv",
+                    "version": "1.0.1"
                 }
-            ],
-            "timestamp": "2024-11-15 20:19:28"
+            ]
         },
         {
             "name": "pydantic_core",
@@ -1134,40 +1219,50 @@
             "version": "0.3.2",
             "dependencies": [
                 {
-                    "name": "aiohttp"
+                    "name": "aiohttp",
+                    "version": "3.9.5"
                 },
                 {
-                    "name": "dataclasses-json"
+                    "name": "dataclasses-json",
+                    "version": "0.6.7"
                 },
                 {
-                    "name": "langchain"
+                    "name": "langchain",
+                    "version": "0.3.25"
                 },
                 {
-                    "name": "langchain-core"
+                    "name": "langchain-core",
+                    "version": "0.3.60"
                 },
                 {
-                    "name": "langsmith"
+                    "name": "langsmith",
+                    "version": "0.1.147"
                 },
                 {
-                    "name": "numpy"
+                    "name": "numpy",
+                    "version": "1.26.4"
                 },
                 {
-                    "name": "pydantic-settings"
+                    "name": "pydantic-settings",
+                    "version": "2.5.2"
                 },
                 {
-                    "name": "PyYAML"
+                    "name": "PyYAML",
+                    "version": "6.0.2"
                 },
                 {
-                    "name": "requests"
+                    "name": "requests",
+                    "version": "2.32.3"
                 },
                 {
-                    "name": "SQLAlchemy"
+                    "name": "SQLAlchemy",
+                    "version": "2.0.34"
                 },
                 {
-                    "name": "tenacity"
+                    "name": "tenacity",
+                    "version": "8.5.0"
                 }
-            ],
-            "timestamp": "2024-11-16 16:44:03"
+            ]
         },
         {
             "name": "langchain-openai",
@@ -1190,108 +1285,137 @@
             "version": "0.1.134",
             "dependencies": [
                 {
-                    "name": "httpx"
+                    "name": "httpx",
+                    "version": "0.27.0"
                 },
                 {
-                    "name": "orjson"
+                    "name": "orjson",
+                    "version": "3.10.18"
                 },
                 {
-                    "name": "pydantic"
+                    "name": "pydantic",
+                    "version": "2.9.2"
                 },
                 {
-                    "name": "requests"
+                    "name": "requests",
+                    "version": "2.32.3"
                 },
                 {
-                    "name": "requests-toolbelt"
+                    "name": "requests-toolbelt",
+                    "version": "1.0.0"
                 }
-            ],
-            "timestamp": "2024-11-16 16:50:05"
+            ]
         },
         {
             "name": "pinecone-client",
             "version": "5.0.1",
             "dependencies": [
                 {
-                    "name": "certifi"
+                    "name": "certifi",
+                    "version": "2024.8.30"
                 },
                 {
-                    "name": "pinecone-plugin-inference"
+                    "name": "pinecone-plugin-inference",
+                    "version": "1.1.0"
                 },
                 {
-                    "name": "pinecone-plugin-interface"
+                    "name": "pinecone-plugin-interface",
+                    "version": "0.0.7"
                 },
                 {
-                    "name": "tqdm"
+                    "name": "tqdm",
+                    "version": "4.67.1"
                 },
                 {
-                    "name": "typing-extensions"
+                    "name": "typing-extensions",
+                    "version": "4.12.2"
                 },
                 {
-                    "name": "urllib3"
+                    "name": "urllib3",
+                    "version": "2.2.2"
                 }
-            ],
-            "timestamp": "2024-11-16 16:53:46"
+            ]
         },
         {
             "name": "pinecone-plugin-inference",
             "version": "1.1.0",
             "dependencies": [
                 {
-                    "name": "pinecone-plugin-interface"
+                    "name": "pinecone-plugin-interface",
+                    "version": "0.0.7"
                 }
-            ],
-            "timestamp": "2024-11-16 16:54:51"
+            ]
         },
         {
             "name": "pinecone-plugin-interface",
             "version": "0.0.7",
-            "dependencies": [],
-            "timestamp": "2024-11-16 16:55:46"
+            "dependencies": []
         },
         {
             "name": "pytesseract",
             "version": "0.3.13",
             "dependencies": [
                 {
-                    "name": "packaging"
+                    "name": "packaging",
+                    "version": "24.1"
                 },
                 {
-                    "name": "Pillow"
+                    "name": "Pillow",
+                    "version": "11.2.1"
                 }
-            ],
-            "timestamp": "2024-11-20 18:10:45"
+            ]
         },
         {
             "name": "unstructured_pytesseract",
             "version": "0.3.13",
             "dependencies": [
                 {
-                    "name": "packaging"
+                    "name": "packaging",
+                    "version": "24.1"
                 },
                 {
-                    "name": "Pillow"
+                    "name": "Pillow",
+                    "version": "11.2.1"
                 }
-            ],
-            "timestamp": "2024-11-20 18:49:11"
+            ]
         },
         {
             "name": "twilio",
             "version": "9.5.2",
             "dependencies": [
                 {
-                    "name": "aiohttp"
+                    "name": "aiohttp",
+                    "version": "3.9.5"
                 },
                 {
-                    "name": "aiohttp-retry"
+                    "name": "aiohttp-retry",
+                    "version": "2.9.1"
                 },
                 {
-                    "name": "PyJWT"
+                    "name": "PyJWT",
+                    "version": "2.9.0"
                 },
                 {
-                    "name": "requests"
+                    "name": "requests",
+                    "version": "2.32.3"
+                }
+            ]
+        },
+        {
+            "name": "paystack-sdk",
+            "version": "1.0.1",
+            "dependencies": [
+                {
+                    "name": "python-dateutil"
+                },
+                {
+                    "name": "six"
+                },
+                {
+                    "name": "urllib3"
                 }
             ],
-            "timestamp": "2025-04-20 22:00:37"
+            "timestamp": "2025-05-28 20:59:33"
         }
     ],
     "modules": [
