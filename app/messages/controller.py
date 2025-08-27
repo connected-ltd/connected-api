@@ -50,7 +50,7 @@ def respond_to_message():
         answer = qa_chain(appended_message, chat_history, shortcode, user_language)
         AfricasTalking().send(sender=shortcode, message=answer, recipients=[sender_number])
     else:
-        AfricasTalking().send(sender=shortcode, message="Your number is not registered in our system, please dial *347*875# to register.", recipients=[sender_number])    
+        AfricasTalking().send(sender=shortcode, message="Your number is not registered in our system, please register first to get responses.", recipients=[sender_number])    
     
     
     return response
@@ -76,7 +76,7 @@ def twilio_response():
             answer = qa_chain(appended_message, chat_history, formatted_recipient_number, user_language)
             send_twilio_message(to=sender_number, message=answer, from_=recipient_number)
         else:
-            send_twilio_message(to=sender_number, message="Your number is not registered in our system, please dial *347*875# to register.", from_=recipient_number)    
+            send_twilio_message(to=sender_number, message="Your number is not registered in our system, please register first to get responses.", from_=recipient_number)    
         
         
         return response
@@ -112,7 +112,7 @@ def twilio_sms_response():
             answer = qa_chain(appended_message, chat_history, formatted_recipient_number, user_language)
             send_twilio_message(to=sender_number, message=answer, from_=recipient_number)
         else:
-            send_twilio_message(to=sender_number, message="Your number is not registered in our system, please dial *347*875# to register.", from_=recipient_number)    
+            send_twilio_message(to=sender_number, message="Your number is not registered in our system, please register first to get responses.", from_=recipient_number)    
         
         
         return message
