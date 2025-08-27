@@ -84,10 +84,47 @@ def twilio_response():
         # response_body = send_twilio_message(from_=recipient_number, to=sender_number)
 
 
-        return {"message": "Message sent successfully", "response_body": response_body}, 200
+        # return {"message": "Message sent successfully", "response_body": response_body}, 200
     except Exception as e:
         print(f"Error: {e}")
         return {"message": f"Failed to send message: {str(e)}"}, 500
+    
+    
+@bp.post('/messages/twilio/sms')
+def twilio_sms_response():
+    try:
+        response = request.form
+        chat_history = []
+        sender_number = response.get('From')  
+        recipient_number = response.get('To')
+        message = response.get('Body')
+        print()
+ 
+        
+        appended_message = f'{message}'
+        
+        # formatted_sender_number = sender_number.split(':')[1].strip()
+        formatted_recipient_number = recipient_number.split('+')[1].strip()
+        
+        number_exists = Numbers.check_if_number_exists(sender_number)
+        user_language = Numbers.get_language_by_number(sender_number)
+        if number_exists:
+            answer = qa_chain(appended_message, chat_history, formatted_recipient_number, user_language)
+            send_twilio_message(to=sender_number, message=answer, from_=recipient_number)
+        else:
+            send_twilio_message(to=sender_number, message="Your number is not registered in our system, please dial *347*875# to register.", from_=recipient_number)    
+        
+        
+        return message
+
+        # response_body = send_twilio_message(from_=recipient_number, to=sender_number)
+
+
+        # return {"message": "Message sent successfully", "response_body": response_body}, 200
+    except Exception as e:
+        print(f"Error: {e}")
+        return {"message": f"Failed to send message: {str(e)}"}, 500
+    
     
 
 @bp.get('/messages/<int:id>')

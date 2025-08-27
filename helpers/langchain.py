@@ -87,7 +87,8 @@ def qa_chain(question, history=[], shortcode="", language=""):
     get_or_create_index(shortcode)
 
     # Determine the maximum response length based on the shortcode length
-    max_response_length = 300 if len(shortcode) <= 5 else 3000
+    # max_response_length = 300 if len(shortcode) <= 5 else 3000
+    max_response_length = 300 #TODO: Fix for whatsapp messaging
 
     # Initialize a LangChain object for chatting with the LLM
     llm = ChatOpenAI(
