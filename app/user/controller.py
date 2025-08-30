@@ -39,11 +39,11 @@ def register():
     password = request.json.get('password')
     address = request.json.get('address')
     description = request.json.get('description')
-    # role = request.json.get('role')
+    role = "organization"
     user = User.get_by_username(username)
     if user is not None:
         return {'message': 'User already exists', 'status':'failed'}, 400
-    user = User.create(username, password, address, description, None)
+    user = User.create(username, password, address, description, role)
     if user is not None:
         return {'message': 'User created successfully', 'status':'success'}, 201
     return {'message': 'User not created successfully', 'status':'failed'}, 400
