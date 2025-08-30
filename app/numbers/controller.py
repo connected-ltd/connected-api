@@ -65,7 +65,7 @@ def delete_numbers(id):
 @auth_required('admin', 'super_admin')
 def get_all_numbers():
     numberss = Numbers.get_all()
-    return {'data':NumbersSchema(many=True).dump(numberss), 'message': 'Numbers fetched successfully', 'status':'success'}, 200
+    return {'data': NumbersSchema(many=True).dump(numberss), 'message': 'Numbers fetched successfully', 'status': 'success'}, 200
 
 @bp.get('/numbers/stats')
 @auth_required('admin', 'super_admin')
