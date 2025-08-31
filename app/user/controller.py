@@ -33,17 +33,50 @@ def reset_password():
     g.user.reset_password(new_password)
     return {'message': 'Password updated successfully', 'status':'success'}, 200
 
+@bp.patch('/update-user')
+@auth_required()
+def update_user():
+    username = request.json.get('username')
+    company_name = request.json.get('company_name')
+    address = request.json.get('address')
+    description = request.json.get('description')
+    role = request.json.get('role')
+    if role and role not in ['organization']:
+        return {'message': "Invalid role provided", 'status':'failed'}, 400
+    if username:
+        existing_user = User.get_by_username(username)
+        if existing_user and existing_user.id != g.user.id:
+            return {'message': 'Username already taken', 'status':'failed'}, 400
+    if company_name:
+        existing_company = User.query.filter_by(company_name=company_name).first()
+        if existing_company and existing_company.id != g.user.id:
+            return {'message': 'Company name already taken', 'status':'failed'}, 400
+    # Update the current user instance with new values if provided
+    if username:
+        g.user.username = username
+    if company_name:
+        g.user.company_name = company_name
+    if address:
+        g.user.address = address
+    if description:
+        g.user.description = description
+    if role:
+        g.user.role = role
+    g.user.update()
+    return {'data': UserSchema().dump(g.user), 'message': 'User updated successfully', 'status':'success'}, 200
+
 @bp.post('/register')
 def register():
     username = request.json.get('username')
+    company_name = request.json.get('company_name')
     password = request.json.get('password')
     address = request.json.get('address')
     description = request.json.get('description')
-    # role = request.json.get('role')
+    role = "organization"
     user = User.get_by_username(username)
     if user is not None:
         return {'message': 'User already exists', 'status':'failed'}, 400
-    user = User.create(username, password, address, description, None)
+    user = User.create(username, company_name, password, address, description, role)
     if user is not None:
         return {'message': 'User created successfully', 'status':'success'}, 201
     return {'message': 'User not created successfully', 'status':'failed'}, 400
