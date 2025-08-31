@@ -27,7 +27,6 @@ def create_files():
         train_with_resource_in_background.delay(resource_url, shortcode['shortcode'])
         # train_with_resource(resource_url, shortcode['shortcode'])
         print("File name: ", file.filename)
-        print("User id: ", g.user.id)
         fileData = Files.create(file.filename, g.user.id)
         return {'data':FilesSchema().dump(fileData), 'message': 'Files created successfully', 'status':'success'}, 201
     return {'message': 'No file was supplied', 'status':'failed'}, 401
@@ -46,7 +45,6 @@ def create_whatsapp_files():
         train_with_resource_in_background.delay(resource_url, formatted_whatsapp_number)
         # train_with_resource(resource_url, shortcode['shortcode'])
         print("File name: ", file.filename)
-        print("User id: ", g.user.id)
         fileData = Files.create(file.filename, g.user.id)
         return {'data':FilesSchema().dump(fileData), 'message': 'Files created successfully', 'status':'success'}, 201
     return {'message': 'No file was supplied', 'status':'failed'}, 401
@@ -139,5 +137,5 @@ def delete_files(id):
 @bp.get('/files')
 @auth_required()
 def get_all_files():
-    filess = Files.get_all()
-    return {'data':FilesSchema(many=True).dump(filess), 'message': 'Files fetched successfully', 'status':'success'}, 200
+    data = Files.get_all_with_shortcodes_and_whatsapp()
+    return {'data': data, 'message': 'Files fetched successfully', 'status': 'success'}, 200

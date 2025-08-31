@@ -174,4 +174,7 @@ def delete_messages(id):
 @auth_required()
 def get_all_messages():
     messagess = Messages.get_all()
-    return {'data':MessagesSchema(many=True).dump(messagess), 'message': 'Messages fetched successfully', 'status':'success'}, 200
+    # If the result is already a list of dicts (from join), return as is
+    if messagess and isinstance(messagess[0], dict):
+        return {'data': messagess, 'message': 'Messages fetched successfully', 'status': 'success'}, 200
+    return {'data': MessagesSchema(many=True).dump(messagess), 'message': 'Messages fetched successfully', 'status': 'success'}, 200

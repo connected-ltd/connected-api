@@ -10,13 +10,13 @@ from flask_jwt_extended import (
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, unique=True, nullable=False)
-    company_name = db.Column(db.String, nullable=True, unique=True)
+    company_name = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
     address = db.Column(db.String, nullable=False)
     description = db.Column(db.String, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=db.func.now())
     updated_at = db.Column(db.DateTime, nullable=False, default=db.func.now())
-    role = db.Column(db.String, nullable=True)
+    role = db.Column(db.String, nullable=False)
     
     
     def save(self):

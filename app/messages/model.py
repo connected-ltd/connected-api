@@ -33,7 +33,37 @@ class Messages(db.Model):
     
     @classmethod
     def get_all(cls):
-        return cls.query.filter_by(is_deleted=False).all()
+        from app.shortcodes.model import Shortcodes
+        from app.areas.model import Areas
+        from sqlalchemy.orm import aliased
+
+        Shortcode = aliased(Shortcodes)
+        Area = aliased(Areas)
+
+        results = db.session.query(
+            cls,
+            Shortcode.shortcode,
+            Area.name
+        ).join(
+            Shortcode, cls.shortcode_id == Shortcode.id
+        ).join(
+            Area, cls.area_id == Area.id
+        ).filter(
+            cls.is_deleted == False
+        ).all()
+
+        data = []
+        for msg_obj, shortcode, area in results:
+            msg_dict = {
+                'id': msg_obj.id,
+                'message': msg_obj.message,
+                'created_at': msg_obj.created_at,
+                'updated_at': msg_obj.updated_at,
+                'shortcode': shortcode,
+                'area': area
+            }
+            data.append(msg_dict)
+        return data
     
     @classmethod
     def create(cls, message, shortcode_id, user_id, area_id):
