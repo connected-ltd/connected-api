@@ -1,20 +1,15 @@
+# Base image
 FROM python:3.9
 
-# Install supervisor
-RUN apt-get update && apt-get install -y supervisor
+# Ensure Python prints straight to terminal and doesn't create .pyc files
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    DEBIAN_FRONTEND=noninteractive
 
-RUN mkdir app
-
-RUN cd app
-
-WORKDIR /app
-
-COPY .fs .
-
-RUN pip install --upgrade flask-setup
-RUN fs install
-
-RUN apt-get update && apt-get install -y \
+# System deps (supervisor + OCR/graphics libs)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    supervisor \
     tesseract-ocr \
     libtesseract-dev \
     poppler-utils \
@@ -22,77 +17,31 @@ RUN apt-get update && apt-get install -y \
     libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
-COPY . .
+# Create app dir
+WORKDIR /app
 
-# TODO: Add all your environment variables here
-ARG DATABASE_URI
-ENV DATABASE_URI=${DATABASE_URI}
+# Copy only files needed to install deps first (better layer caching)
+COPY .fs /app/.fs
 
-ARG OPENAI_API_KEY
-ENV OPENAI_API_KEY=${OPENAI_API_KEY}
+# Install flask-setup and project deps via fs (no pip cache)
+RUN pip install --no-cache-dir --upgrade flask-setup && \
+    fs install && \
+    rm -rf /root/.cache/pip
 
-ARG PINECONE_API_KEY
-ENV PINECONE_API_KEY=${PINECONE_API_KEY}
+# Now copy the rest of the project
+COPY . /app
 
-ARG TWILIO_ACCOUNT_SID
-ENV TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
+# Copy entrypoint and make it executable
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
-ARG TWILIO_AUTH_TOKEN
-ENV TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
-
-ARG AFRICASTALKING_API_KEY
-ENV AFRICASTALKING_API_KEY=${AFRICASTALKING_API_KEY}
-
-ARG AFRICASTALKING_USERNAME
-ENV AFRICASTALKING_USERNAME=${AFRICASTALKING_USERNAME}
-
-ARG SPACE_REGION
-ENV SPACE_REGION=${SPACE_REGION}
-
-ARG SPACE_NAME
-ENV SPACE_NAME=${SPACE_NAME}
-
-ARG SPACE_KEY
-ENV SPACE_KEY=${SPACE_KEY}
-
-ARG SPACE_SECRET
-ENV SPACE_SECRET=${SPACE_SECRET}
-
-ARG SPACE_ENDPOINT
-ENV SPACE_ENDPOINT=${SPACE_ENDPOINT}
-
-ARG SPACE_EDGE_ENDPOINT
-ENV SPACE_EDGE_ENDPOINT=${SPACE_EDGE_ENDPOINT}
-
-ARG CELERY_BROKER_URL
-ENV CELERY_BROKER_URL=${CELERY_BROKER_URL}
-
-ARG result_backend
-ENV result_backend=${result_backend}
-
-ARG MAIL_SERVER
-ENV MAIL_SERVER=${MAIL_SERVER}
-
-ARG MAIL_PORT
-ENV MAIL_PORT=${MAIL_PORT}
-
-ARG MAIL_USERNAME
-ENV MAIL_USERNAME=${MAIL_USERNAME}
-
-ARG MAIL_PASSWORD
-ENV MAIL_PASSWORD=${MAIL_PASSWORD}
-
-ARG APP_SECRET
-ENV APP_SECRET=${APP_SECRET}
-
-ARG FLASK_DEBUG
-ENV FLASK_DEBUG=${FLASK_DEBUG}
-
-RUN flask db upgrade
-
-RUN python manage.py
-
-
+# Expose port 80 for CapRover
 EXPOSE 80
 
-CMD bash -c "supervisord -c supervisord.conf"
+# Healthcheck (optional but helpful)
+# Adjust /health if you have a health route; otherwise comment this out
+HEALTHCHECK --interval=30s --timeout=5s --retries=5 \
+  CMD wget -qO- http://127.0.0.1:80/health || exit 1
+
+# Start the container
+CMD ["/app/entrypoint.sh"]

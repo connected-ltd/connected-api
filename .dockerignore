@@ -1,0 +1,48 @@
+# VCS & metadata
+.git
+.gitignore
+.gitattributes
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.egg-info/
+.eggs/
+.build/
+dist/
+.mypy_cache/
+pytest_cache/
+
+# Envs
+.env
+.env.*
+venv/
+.venv/
+
+# Logs & dumps
+*.log
+logs/
+*.sqlite
+dump.sql
+*.db
+
+# Node (in case any front-end bits end up here)
+node_modules/
+npm-debug.log*
+yarn.lock
+pnpm-lock.yaml
+
+# OS cruft
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Docker
+docker-compose*.yml
+.docker/
