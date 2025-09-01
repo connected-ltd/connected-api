@@ -4,6 +4,7 @@ from app.numbers.model import *
 
 class NumbersSchema(ma.SQLAlchemyAutoSchema):
     area = ma.Function(lambda obj: obj.area.name if obj.area else None)
+    area_id = ma.Function(lambda obj: obj.area.id if obj.area else None)
     class Meta:
         model = Numbers
-        exclude = ('is_deleted', 'area_id')
+        exclude = ('is_deleted', )
