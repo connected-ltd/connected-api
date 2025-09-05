@@ -217,8 +217,14 @@ flask db upgrade
 
 ---
 
+## Privacy & Compliance
+
+See **PRIVACY_COMPLIANCE.md** for NDPR/GDPR controls (encryption, consent, retention).
+
+---
+
 ## 📄 License
 
-This project is currently **proprietary**, but is scheduled to be released under the **Apache 2.0 License** in Q3 2025.
+This project is currently **proprietary**, but is scheduled to be released under the **Apache 2.0 License** in Q4 2025.
 
 ---
