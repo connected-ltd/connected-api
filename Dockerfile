@@ -1,47 +1,34 @@
-# Base image
-FROM python:3.9
+FROM python:3.11-slim
 
-# Ensure Python prints straight to terminal and doesn't create .pyc files
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PIP_NO_CACHE_DIR=1 \
-    DEBIAN_FRONTEND=noninteractive
+    OMP_NUM_THREADS=1 \
+    OPENBLAS_NUM_THREADS=1 \
+    MKL_NUM_THREADS=1 \
+    NUMEXPR_NUM_THREADS=1 \
+    MALLOC_ARENA_MAX=2
 
-# System deps (supervisor + OCR/graphics libs)
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    supervisor \
-    tesseract-ocr \
-    libtesseract-dev \
-    poppler-utils \
-    libgl1 \
-    libglib2.0-0 \
+      build-essential curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Create app dir
 WORKDIR /app
 
-# Copy only files needed to install deps first (better layer caching)
-COPY .fs /app/.fs
+# Install Python deps
+COPY requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Install flask-setup and project deps via fs (no pip cache)
-RUN pip install --no-cache-dir --upgrade flask-setup && \
-    fs install && \
-    rm -rf /root/.cache/pip
-
-# Now copy the rest of the project
+# Copy app
 COPY . /app
 
-# Copy entrypoint and make it executable
-COPY entrypoint.sh /app/entrypoint.sh
-RUN chmod +x /app/entrypoint.sh
+# Render provides $PORT; EXPOSE optional
+EXPOSE 10000
 
-# Expose port 80 for CapRover
-EXPOSE 80
-
-# Healthcheck (optional but helpful)
-# Adjust /health if you have a health route; otherwise comment this out
-HEALTHCHECK --interval=30s --timeout=5s --retries=5 \
-  CMD wget -qO- http://127.0.0.1:80/health || exit 1
-
-# Start the container
-CMD ["/app/entrypoint.sh"]
+# Tiny Gunicorn setup; no Supervisor, no worker
+CMD gunicorn "main:app" \
+  --bind 0.0.0.0:${PORT:-10000} \
+  --workers=1 --threads=2 \
+  --worker-tmp-dir /dev/shm \
+  --timeout 60 \
+  --max-requests 200 --max-requests-jitter 50
