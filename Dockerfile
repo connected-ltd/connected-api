@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.9
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
@@ -7,25 +7,29 @@ ENV PYTHONUNBUFFERED=1 \
     OPENBLAS_NUM_THREADS=1 \
     MKL_NUM_THREADS=1 \
     NUMEXPR_NUM_THREADS=1 \
-    MALLOC_ARENA_MAX=2
+    MALLOC_ARENA_MAX=2 \
+    DEBIAN_FRONTEND=noninteractive
 
+# Minimal system deps only
 RUN apt-get update && apt-get install -y --no-install-recommends \
-      build-essential curl \
+      build-essential curl ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-# Install Python deps
-COPY requirements.txt /app/requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy fs manifest first for layer caching, then install via flask-setup
+COPY .fs /app/.fs
+RUN pip install --no-cache-dir --upgrade flask-setup \
+ && fs install \
+ && rm -rf /root/.cache/pip
 
-# Copy app
+# Copy the rest of your app
 COPY . /app
 
-# Render provides $PORT; EXPOSE optional
+# (Optional) EXPOSE is harmless, but Render routes to $PORT dynamically
 EXPOSE 10000
 
-# Tiny Gunicorn setup; no Supervisor, no worker
+# Start tiny Gunicorn (no Supervisor)
 CMD gunicorn "main:app" \
   --bind 0.0.0.0:${PORT:-10000} \
   --workers=1 --threads=2 \
