@@ -4,6 +4,9 @@ from flask_marshmallow import Marshmallow
 from flask_migrate import Migrate
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
+from dotenv import load_dotenv
+
+load_dotenv()  # This loads the variables from .env into os.environ
 
 # App Config
 app = Flask(__name__, )

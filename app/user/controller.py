@@ -15,7 +15,9 @@ def login():
     
     if user is None:
         return {'message': 'User not found'}, 404
-    if not user.check_password(password):
+    if user.check_password(password):
+        print(user.password)
+        print(f"Checked password: {user.check_password(password)}")
         return {'message': 'Wrong password'}, 401
     # generate token
     access_token = user.generate_access_token()
@@ -68,15 +70,15 @@ def update_user():
 @bp.post('/register')
 def register():
     username = request.json.get('username')
-    company_name = request.json.get('company_name')
     password = request.json.get('password')
     address = request.json.get('address')
     description = request.json.get('description')
+    company_name = request.json.get('company_name')
     role = "organization"
     user = User.get_by_username(username)
     if user is not None:
         return {'message': 'User already exists', 'status':'failed'}, 400
-    user = User.create(username, company_name, password, address, description, role)
+    user = User.create(username=username, password=password, address=address, description=description, role=role, company_name=company_name,)
     if user is not None:
         return {'message': 'User created successfully', 'status':'success'}, 201
     return {'message': 'User not created successfully', 'status':'failed'}, 400
@@ -94,7 +96,7 @@ def registerAdmin():
     user = User.get_by_username(username)
     if user is not None:
         return {'message': 'User already exists', 'status':'failed'}, 400
-    user = User.create(username, password, address, description, role, company_name="ConnectED")
+    user = User.create(username=username, password=password, address=address, description=description, role=role, company_name="ConnectED")
     if user is not None:
         return {'message': 'User created successfully', 'status':'success'}, 201
     return {'message': 'User not created successfully', 'status':'failed'}, 400
