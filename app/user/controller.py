@@ -15,9 +15,7 @@ def login():
     
     if user is None:
         return {'message': 'User not found'}, 404
-    if user.check_password(password):
-        print(user.password)
-        print(f"Checked password: {user.check_password(password)}")
+    if not user.check_password(password):
         return {'message': 'Wrong password'}, 401
     # generate token
     access_token = user.generate_access_token()
