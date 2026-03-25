@@ -82,8 +82,8 @@ class User(db.Model):
         return False
     
     @classmethod
-    def create(cls, username, password, address, description, role):
-        user = cls(username=username, password=password, address=address, description=description, role=role)
+    def create(cls, username, password, address, description, role, company_name):
+        user = cls(username=username, password=password, address=address, description=description, role=role, company_name=company_name)
         user.hash_password()
         user.save()
         return user

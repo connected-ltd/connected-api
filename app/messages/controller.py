@@ -1,7 +1,9 @@
-from flask import Blueprint, request, current_app
+from flask import Blueprint, request
 from app.route_guard import auth_required
 from flask_jwt_extended import get_jwt_identity
 from datetime import datetime
+import asyncio
+import os
 
 from app.messages.model import *
 from app.messages.schema import *
@@ -14,6 +16,7 @@ from app.credit.schema import CreditUsageSchema
 from helpers.africastalking import AfricasTalking
 from helpers.twilio import send_twilio_message
 from helpers.langchain import qa_chain
+from helpers.hollatags import send_sms
 
 bp = Blueprint('messages', __name__)
 
@@ -164,6 +167,42 @@ def respond_to_message():
         if 'usage' in locals() and 'credit_points' in locals():
             credit_points.refund_credits(RESPONSE_CREDIT_COST, usage.id)
         return {'message': str(e), 'status': 'failed'}, 500
+
+
+
+@bp.post('/messages/hollatags_send')
+def hollatags_send_message():
+    user = os.environ.get("HOLLATAGS_USER")
+    password = os.environ.get("HOLLATAGS_PASSWORD")
+    sender = request.form.get('from')
+    receiver = request.form.get('to')
+    msg = request.form.get('msg')
+    
+    try:
+        response = asyncio.run(send_sms(user, password, sender, receiver, msg))
+        return response, 200
+    except Exception as e:
+        return {'message': str(e), 'status': 'failed'}, 500
+
+
+@bp.post('/messages/hollatags_query')
+def hollatags_respond_to_query():
+    user = os.environ.get("HOLLATAGS_USER")
+    password = os.environ.get("HOLLATAGS_PASSWORD")
+    sender = request.form.get('from')
+    receiver = request.form.get('to')
+    msg = request.form.get('msg')
+    
+    try:
+        response = asyncio.run(send_sms(user, password, sender, receiver, msg))
+        return response, 200
+    except Exception as e:
+        return {'message': str(e), 'status': 'failed'}, 500
+
+
+
+
+
 
 @bp.post('/messages/twilio')
 def twilio_response():
