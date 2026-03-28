@@ -114,9 +114,11 @@ def respond_to_message():
     shortcode = response.get('to')
     message = response.get('text')
     
+    print(shortcode)
+    
     try:
         # Get the user associated with the shortcode
-        shortcode_obj = Shortcodes.get_by_shortcode(shortcode)
+        shortcode_obj = Shortcodes.get_user_by_shortcode(shortcode)
         if not shortcode_obj:
             return {'message': 'Invalid shortcode', 'status': 'failed'}, 400
             
