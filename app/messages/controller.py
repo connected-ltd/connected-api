@@ -25,7 +25,7 @@ def create_messages():
     if numbers_to_send:
         for number in numbers_to_send:
             response = AfricasTalking().send(sender=sender_shortcode, message=message, recipients=number)
-            if response["SMSMessageData"]["Recipients"][0]["statusCode"] == 101: 
+            if response["SMSMessageData"]["Recipients"][0]["status"] == 'Success': 
                 messages = Messages.create(message, shortcode_id, user_id, area_id)
                 return {'data':MessagesSchema().dump(messages), 'message': 'Messages created successfully', 'status':'success'}, 201
             else:
