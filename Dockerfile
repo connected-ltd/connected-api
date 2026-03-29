@@ -1,38 +1,25 @@
-FROM python:3.9
+FROM python:3.11-slim
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
-    PIP_NO_CACHE_DIR=1 \
-    OMP_NUM_THREADS=1 \
-    OPENBLAS_NUM_THREADS=1 \
-    MKL_NUM_THREADS=1 \
-    NUMEXPR_NUM_THREADS=1 \
-    MALLOC_ARENA_MAX=2 \
-    DEBIAN_FRONTEND=noninteractive
-
-# Minimal system deps only
-RUN apt-get update && apt-get install -y --no-install-recommends \
-      build-essential curl ca-certificates \
-    && rm -rf /var/lib/apt/lists/*
+    PIP_NO_CACHE_DIR=1
 
 WORKDIR /app
 
-# Copy fs manifest first for layer caching, then install via flask-setup
-COPY .fs /app/.fs
-RUN pip install --no-cache-dir --upgrade flask-setup \
- && fs install \
- && rm -rf /root/.cache/pip
+# System deps
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential curl ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
-# Copy the rest of your app
+# Install deps
+COPY .fs /app/.fs
+RUN pip install --upgrade flask-setup && fs install
+
+# Copy app
 COPY . /app
 
-# (Optional) EXPOSE is harmless, but Render routes to $PORT dynamically
-EXPOSE 10000
+# Copy entrypoint
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
-# Start tiny Gunicorn (no Supervisor)
-CMD gunicorn "main:app" \
-  --bind 0.0.0.0:${PORT:-10000} \
-  --workers=1 --threads=2 \
-  --worker-tmp-dir /dev/shm \
-  --timeout 60 \
-  --max-requests 200 --max-requests-jitter 50
+ENTRYPOINT ["/app/entrypoint.sh"]
