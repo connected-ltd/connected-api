@@ -11,7 +11,7 @@ ENV PYTHONUNBUFFERED=1 \
     DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-      build-essential curl ca-certificates \
+      build-essential curl ca-certificates supervisor \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
