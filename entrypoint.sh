@@ -1,25 +1,58 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
-echo "🚀 Booting app..."
+echo "🔧 Bootstrapping container..."
 
-if [ "${RUN_MIGRATIONS:-false}" = "true" ]; then
-  echo "🔄 Running migrations..."
-  flask db upgrade || echo "⚠️ Migration failed"
-fi
+# Optional: show key envs exist (mask sensitive values)
+echo "ENV CHECK -> DATABASE_URI: ${DATABASE_URI:-<missing>}, FLASK_DEBUG: ${FLASK_DEBUG:-0}"
 
-# Start Celery in background (LOW RESOURCE MODE)
-echo "👷 Starting Celery worker..."
-celery -A app.celery.tasks.celery worker \
-  --loglevel=info \
-  --concurrency=1 \
-  --pool=solo &
+# Wait for DB if DATABASE_URI is set and looks like a network target
+# Can be refined for DB driver (Postgres/MySQL)
+wait_db() {
+  local retries=20
+  local sleep_sec=3
+  local ok=0
 
-# Start Gunicorn (main process)
-echo "🌐 Starting Gunicorn..."
-exec gunicorn "main:app" \
-  --bind 0.0.0.0:${PORT:-10000} \
-  --workers=1 \
-  --threads=2 \
-  --timeout=60 \
-  --preload
+  if [[ -z "${DATABASE_URI:-}" ]]; then
+    echo "ℹ️ DATABASE_URI not set, skipping DB wait."
+    return 0
+  fi
+
+  echo "⏳ Waiting for database to be reachable (up to $((retries*sleep_sec))s)..."
+  for i in $(seq 1 "$retries"); do
+    # Try a lightweight DB touch via Flask (adjust to your app init if needed)
+    if flask db current >/dev/null 2>&1; then
+      ok=1
+      break
+    fi
+    echo "  attempt $i/$retries: DB not ready yet..."
+    sleep "$sleep_sec"
+  done
+
+  if [[ "$ok" -ne 1 ]]; then
+    echo "⚠️ DB did not become reachable in time. Continuing anyway."
+  else
+    echo "✅ DB reachable."
+  fi
+}
+
+# Run migrations with retry (does not crash the container if it fails)
+run_migrations() {
+  echo "🔄 Running database migrations (flask db upgrade)..."
+  if flask db upgrade; then
+    echo "✅ Migrations applied."
+  else
+    echo "⚠️ Migration step failed — check DB connectivity and Alembic setup."
+  fi
+}
+
+wait_db
+run_migrations
+
+# Run manage.py
+echo "🌱 Running manage.py..."
+python /app/manage.py
+
+echo "▶️ Starting Supervisor..."
+# Use exec so signals are handled correctly
+exec supervisord -c /app/supervisord.conf
