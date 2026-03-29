@@ -1416,6 +1416,25 @@
                 }
             ],
             "timestamp": "2025-05-28 20:59:33"
+        },
+        {
+            "name": "langchain-google-genai",
+            "version": "2.1.12",
+            "dependencies": [
+                {
+                    "name": "filetype"
+                },
+                {
+                    "name": "google-ai-generativelanguage"
+                },
+                {
+                    "name": "langchain-core"
+                },
+                {
+                    "name": "pydantic"
+                }
+            ],
+            "timestamp": "2026-03-29 11:50:03"
         }
     ],
     "modules": [

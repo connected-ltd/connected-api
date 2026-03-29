@@ -2,8 +2,11 @@ from app import db
 
 class Files(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, unique=False, nullable=False)
+    name = db.Column(db.String, unique=True, nullable=False)
+    file_url = db.Column(db.String, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    shortcode_id = db.Column(db.Integer, db.ForeignKey('shortcodes.id'), nullable=True) # NOTE: Can either be whatsapp number id or shortcode id
+    whatsapp_number_id = db.Column(db.Integer, db.ForeignKey('whatsapp__number.id'), nullable=True) # NOTE: Can either be whatsapp number id or shortcode id
     created_at = db.Column(db.DateTime, default=db.func.now())
     updated_at = db.Column(db.DateTime, default=db.func.now())
     is_deleted = db.Column(db.Boolean, default=False)
@@ -75,8 +78,26 @@ class Files(db.Model):
             data.append(file_dict)
         return data
     
+    # TODO: Redo the above implementation
+    
     @classmethod
-    def create(cls, name, user_id):
-        files = cls(name=name, user_id=user_id)
-        files.save()
-        return files
+    def has_files(cls, shortcode_id):
+        return cls.query.filter_by(
+            shortcode_id=shortcode_id, 
+            is_deleted=False
+        ).first() is not None
+
+    @classmethod
+    def create(cls, name, user_id, file_url, shortcode_id=None, whatsapp_number_id=None):
+        if (shortcode_id or whatsapp_number_id) and file_url:
+            file_obj = cls(
+                name=name, 
+                user_id=user_id, 
+                file_url=file_url,
+                shortcode_id=shortcode_id, 
+                whatsapp_number_id=whatsapp_number_id
+            )
+            file_obj.save()
+            return file_obj
+        return None
+

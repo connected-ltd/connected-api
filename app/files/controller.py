@@ -9,7 +9,6 @@ from app.shortcodes.model import *
 from app.shortcodes.schema import *
 from app.whatsapp_number.model import *
 from app.whatsapp_number.schema import *
-from app.shortcode_files.model import *
 # from helpers.langchain import train_with_resource
 from app.celery.tasks import train_with_resource_in_background
 from helpers.upload import do_upload
@@ -20,80 +19,52 @@ bp = Blueprint('files', __name__)
 @auth_required()
 def create_files():
     file = request.files.get('file')
-    shortcode_data: Shortcodes = Shortcodes.get_by_user_id(g.user.id)
-    shortcode = ShortcodesSchema().dump(shortcode_data)
-    if file:
-        resource_url = do_upload(file)
-        train_with_resource_in_background.delay(resource_url, shortcode['shortcode'])
-        # train_with_resource(resource_url, shortcode['shortcode'])
-        print("File name: ", file.filename)
-        fileData = Files.create(file.filename, g.user.id)
-        return {'data':FilesSchema().dump(fileData), 'message': 'Files created successfully', 'status':'success'}, 201
-    return {'message': 'No file was supplied', 'status':'failed'}, 500
-
+    shortcode_data = Shortcodes.get_by_user_id(g.user.id)
     
+    if not file:
+        return {'message': 'No file supplied', 'status': 'failed'}, 400
+    if not shortcode_data:
+        return {'message': 'Shortcode not found', 'status': 'failed'}, 404
+
+    resource_url = do_upload(file)
+    
+    train_with_resource_in_background.delay(
+        resource_url=resource_url,
+        filename=file.filename,
+        user_id=g.user.id,
+        index_identifier=shortcode_data.shortcode,
+        shortcode_id=shortcode_data.id
+    )
+    
+    return {'message': 'File is being processed. It will be available shortly.', 'status': 'processing'}, 202
+
 
 @bp.post('/files/whatsapp')
 @auth_required()
 def create_whatsapp_files():
     file = request.files.get('file')
-    whatsapp_number_data: Whatsapp_Number = Whatsapp_Number.get_by_user_id(g.user.id)
-    whatsapp_number = Whatsapp_NumberSchema().dump(whatsapp_number_data)
-    formatted_whatsapp_number = whatsapp_number['number'].split('+')[1].strip()
-    if file:
-        resource_url = do_upload(file)
-        train_with_resource_in_background.delay(resource_url, formatted_whatsapp_number)
-        # train_with_resource(resource_url, shortcode['shortcode'])
-        print("File name: ", file.filename)
-        fileData = Files.create(file.filename, g.user.id)
-        return {'data':FilesSchema().dump(fileData), 'message': 'Files created successfully', 'status':'success'}, 201
-    return {'message': 'No file was supplied', 'status':'failed'}, 500
-# TODO: Test this endpoint later
-        
+    whatsapp_data = Whatsapp_Number.get_by_user_id(g.user.id)
+    
+    if not file:
+        return {'message': 'No file supplied', 'status': 'failed'}, 400
+    if not whatsapp_data:
+        return {'message': 'WhatsApp number not found', 'status': 'failed'}, 404
 
-# @bp.post('/files')
-# @auth_required()
-# def create_files():
-#     file = request.files.get('file')
-#     user_id = request.form.get('user_id')
-#     shortcode = request.form.get('shortcode')
-#     username = User.get_username_by_id(user_id)
-#     user_classname = username.split('@')[0].replace('-', '_').replace('.', '_').replace(',', '_')
-#     if file:
-#         if not (file.filename.lower().endswith('.pdf') or file.filename.lower().endswith('.docx')):
-#             return {'message':'Only PDf and DOCX files are allowed'}, 400
-        
-#         wv_class_name = f"{user_classname}_{file.filename.split('.')[0]}".replace(" ", "").replace("-", "")
-        
-#         result, status_code = process_uploaded_file(file, wv_client, wv_class_name)  
+    formatted_number = whatsapp_data.number.split('+')[1].strip()
+    resource_url = do_upload(file)
+    
+    # Pass whatsapp_number_id, leave shortcode_id as None
+    train_with_resource_in_background.delay(
+        resource_url=resource_url,
+        filename=file.filename,
+        user_id=g.user.id,
+        index_identifier=formatted_number,
+        whatsapp_number_id=whatsapp_data.id
+    )
+    
+    return {'message': 'WhatsApp file is being processed.', 'status': 'processing'}, 202
 
-#         if result['status'] == "exists":
-#             return result, status_code
-#         elif result['status'] == "error":
-#             return result, status_code
-#         print(result, status_code)
         
-#         try:     
-#             # TODO: Handle when file already exists
-#             added_file = Files.create(file.filename, user_id, wv_class_name)
-            
-#             if added_file:    
-#                 # TODO: Handle when shortcode already exists
-#                 added_shortcode = Shortcodes.create(shortcode, user_id) 
-#                 if added_shortcode:
-#                     file_id = added_file.id
-#                     Shortcode_Files.create(added_shortcode.id, file_id)
-                    
-#         except:
-#             wv_delete_doc(wv_client, wv_class_name, file.filename)
-#             return {'message': 'Error uploading file', 'status': 'error'}, 500
-#         finally:
-#             wv_client.close()
-        
-#         wv_client.close()        
-#         return {'data':FilesSchema().dump(file), 'message': 'Files created successfully', 'status':'success'}, 201
-#     else:
-#         return {'message':'No file was provided'}, 500
 
 @bp.get('/files/<int:id>')
 @auth_required()

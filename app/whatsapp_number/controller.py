@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint, g, request
 from app.route_guard import auth_required
 
 from app.whatsapp_number.model import *
@@ -10,7 +10,7 @@ bp = Blueprint('whatsapp_number', __name__)
 @auth_required()
 def create_whatsapp_number():
     number = request.json.get('number')
-    user_id = request.json.get('user_id')
+    user_id=g.user.id
     whatsapp_number = Whatsapp_Number.create(number, user_id)
     return {'data':Whatsapp_NumberSchema().dump(whatsapp_number), 'message': 'Whatsapp_Number created successfully', 'status':'success'}, 201
 

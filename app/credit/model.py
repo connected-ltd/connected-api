@@ -4,7 +4,7 @@ from datetime import datetime
 class CreditPoints(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    balance = db.Column(db.Float, nullable=False, default=0.0)
+    balance = db.Column(db.Float, nullable=False, default=50.0)
     created_at = db.Column(db.DateTime, nullable=False, default=db.func.now())
     updated_at = db.Column(db.DateTime, nullable=False, default=db.func.now())
     is_deleted = db.Column(db.Boolean, nullable=False, default=False)

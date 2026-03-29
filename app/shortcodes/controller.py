@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint, g, request
 from app.route_guard import auth_required
 
 from app.shortcodes.model import *
@@ -10,7 +10,7 @@ bp = Blueprint('shortcodes', __name__)
 @auth_required()
 def create_shortcodes():
     shortcode = request.json.get('shortcode')
-    user_id = request.json.get('user_id')
+    user_id=g.user.id
     shortcodes = Shortcodes.create(shortcode, user_id)
     return {'data':ShortcodesSchema().dump(shortcodes), 'message': 'Shortcodes created successfully', 'status':'success'}, 201
 

@@ -2,6 +2,7 @@ from app import db
 from app.files.model import *
 from app.shortcode_files.model import *
 from app.user.model import *
+from sqlalchemy.orm import defer
 
 class Shortcodes(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -51,18 +52,11 @@ class Shortcodes(db.Model):
     
     @classmethod
     def get_user_by_shortcode(cls, shortcode):
-        return db.session.query(User).join(cls, cls.user_id == User.id).filter(
+        return db.session.query(User).join(cls, cls.user_id == User.id).options(defer(User.password)).filter(
             cls.shortcode == shortcode,
             cls.is_deleted == False
         ).first()
         
-    @classmethod
-    def get_user_id_by_shortcode(cls, shortcode):
-        result = cls.query.with_entities(cls.user_id).filter_by(
-            shortcode=shortcode,
-            is_deleted=False
-        ).first()
-        return result[0] if result else None
     
     @classmethod
     def get_username_by_shortcode(cls, shortcode):

@@ -36,5 +36,5 @@ def remove_upload(file_to_remove):
         client.delete_object(Bucket=os.environ.get('SPACE_NAME'), Key=file_to_remove)
         return True
     except Exception as e:
-        print(e)
+        print(f"Failed to delete {file_to_remove}: {e}")
         return None

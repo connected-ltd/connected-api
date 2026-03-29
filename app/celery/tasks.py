@@ -1,7 +1,9 @@
 from app import celery, app
 
 from celery.schedules import crontab
-from helpers.langchain import train_with_resource
+# from helpers.langchain import train_openai_with_resource
+from helpers.gemini_langchain import train_gemini_with_resource
+from helpers.upload import remove_upload
 
 
 import os
@@ -38,7 +40,35 @@ def send_mail(recipients, subject, text, html):
         server.sendmail(
             sender, receiver, message.as_string())
         
-@celery.task
-def train_with_resource_in_background(resource_url, organization_shortcode):
-    train_with_resource(resource_url, organization_shortcode)
+# @celery.task
+# def train_with_resource_in_background(resource_url, organization_shortcode):
+#     # train_openai_with_resource(resource_url, organization_shortcode)
+#     train_gemini_with_resource(resource_url, organization_shortcode)
     
+@celery.task(bind=True)
+def train_with_resource_in_background(self, resource_url, filename, user_id, index_identifier, shortcode_id=None, whatsapp_number_id=None):
+    
+    try:
+        train_gemini_with_resource(resource_url, index_identifier)
+        
+        from app.files.model import Files
+        Files.create(
+            name=filename, 
+            user_id=user_id, 
+            url=resource_url,
+            shortcode_id=shortcode_id, 
+            whatsapp_number_id=whatsapp_number_id
+        )
+        return {"status": "success"}
+
+    except Exception as e:
+        # FALLBACK: Delete from S3/DigitalOcean Spaces if training fails
+        print(f"Training failed for {filename}: {str(e)}. Cleaning up storage...")
+        
+        # Extract the file key from the URL (the last part of the path)
+        file_key = resource_url.split('/')[-1]
+        remove_upload(file_key)
+        
+        return {"status": "failed", "error": str(e)}
+
+

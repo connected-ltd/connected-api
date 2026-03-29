@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint, g, request
 from app.route_guard import auth_required
 from flask_jwt_extended import get_jwt_identity
 from datetime import datetime
@@ -15,7 +15,7 @@ from app.credit.model import CreditPoints, CreditUsage, CreditTransaction
 from app.credit.schema import CreditUsageSchema
 from helpers.africastalking import AfricasTalking
 from helpers.twilio import send_twilio_message
-from helpers.langchain import qa_chain
+from helpers.gemini_langchain import gemini_qa_chain
 from helpers.hollatags import send_sms
 
 bp = Blueprint('messages', __name__)
@@ -29,7 +29,7 @@ def create_messages():
     try:
         message = request.json.get('message')
         shortcode_id = request.json.get('shortcode_id')
-        user_id = request.json.get('user_id')
+        user_id = g.user.id
         area_id = request.json.get('area_id')
         
         # Get numbers and validate shortcode
@@ -64,7 +64,7 @@ def create_messages():
         for number in numbers_to_send:
             try:
                 response = AfricasTalking().send(sender=sender_shortcode, message=message, recipients=number)
-                if response["SMSMessageData"]["Recipients"][0]["statusCode"] == 101:
+                if response["SMSMessageData"]["Recipients"][0]["status"] == 'Success':
                     success_count += 1
                 else:
                     failed_numbers.append(number)
@@ -113,17 +113,15 @@ def respond_to_message():
     sender_number = response.get('from')
     shortcode = response.get('to')
     message = response.get('text')
-    
-    print(shortcode)
-    
+        
     try:
         # Get the user associated with the shortcode
         shortcode_obj = Shortcodes.get_user_by_shortcode(shortcode)
         if not shortcode_obj:
             return {'message': 'Invalid shortcode', 'status': 'failed'}, 400
-            
+        
         # Check and deduct credits
-        credit_points = CreditPoints.get_by_user_id(shortcode_obj.user_id)
+        credit_points = CreditPoints.get_by_user_id(shortcode_obj.id)
         if not credit_points:
             return {'message': 'No credit points found', 'status': 'failed'}, 404
             
@@ -135,16 +133,27 @@ def respond_to_message():
         if not success:
             return {'message': 'Insufficient credits', 'status': 'failed'}, 400
             
-        appended_message = f'{message}'
-        number_exists = Numbers.check_if_number_exists(sender_number)
-        user_language = Numbers.get_language_by_number(sender_number)
 
         try:
+            from app.files.model import Files
+            file_exists = Files.query.filter_by(shortcode_id=shortcode_obj.id, is_deleted=False).first()
+
+            if not file_exists:
+                send_result = AfricasTalking().send(
+                    sender=shortcode,
+                    message="Sorry, no information has been uploaded for this shortcode yet. Please check back later.",
+                    recipients=[sender_number]
+                )
+                return response, 200
+            
+            appended_message = f'{message}'
+            number_exists = Numbers.check_if_number_exists(sender_number)
+            user_language = Numbers.get_language_by_number(sender_number)
             if number_exists:
-                answer = qa_chain(appended_message, chat_history, shortcode, user_language)
+                answer = gemini_qa_chain(appended_message, chat_history, shortcode, user_language)
                 send_result = AfricasTalking().send(sender=shortcode, message=answer, recipients=[sender_number])
                 
-                if send_result["SMSMessageData"]["Recipients"][0]["statusCode"] == 101:
+                if send_result["SMSMessageData"]["Recipients"][0]["status"] == 'Success':
                     return response, 200
                 else:
                     raise Exception("Failed to send message")
@@ -154,7 +163,7 @@ def respond_to_message():
                     message="Your number is not registered in our system, please dial *347*875# to register.",
                     recipients=[sender_number]
                 )
-                if send_result["SMSMessageData"]["Recipients"][0]["statusCode"] == 101:
+                if send_result["SMSMessageData"]["Recipients"][0]["status"] == 'Success':
                     return response, 200
                 else:
                     raise Exception("Failed to send message")
@@ -172,34 +181,34 @@ def respond_to_message():
 
 
 
-@bp.post('/messages/hollatags_send')
-def hollatags_send_message():
-    user = os.environ.get("HOLLATAGS_USER")
-    password = os.environ.get("HOLLATAGS_PASSWORD")
-    sender = request.form.get('from')
-    receiver = request.form.get('to')
-    msg = request.form.get('msg')
+# @bp.post('/messages/hollatags_send')
+# def hollatags_send_message():
+#     user = os.environ.get("HOLLATAGS_USER")
+#     password = os.environ.get("HOLLATAGS_PASSWORD")
+#     sender = request.form.get('from')
+#     receiver = request.form.get('to')
+#     msg = request.form.get('msg')
     
-    try:
-        response = asyncio.run(send_sms(user, password, sender, receiver, msg))
-        return response, 200
-    except Exception as e:
-        return {'message': str(e), 'status': 'failed'}, 500
+#     try:
+#         response = asyncio.run(send_sms(user, password, sender, receiver, msg))
+#         return response, 200
+#     except Exception as e:
+#         return {'message': str(e), 'status': 'failed'}, 500
 
 
-@bp.post('/messages/hollatags_query')
-def hollatags_respond_to_query():
-    user = os.environ.get("HOLLATAGS_USER")
-    password = os.environ.get("HOLLATAGS_PASSWORD")
-    sender = request.form.get('from')
-    receiver = request.form.get('to')
-    msg = request.form.get('msg')
+# @bp.post('/messages/hollatags_query')
+# def hollatags_respond_to_query():
+#     user = os.environ.get("HOLLATAGS_USER")
+#     password = os.environ.get("HOLLATAGS_PASSWORD")
+#     sender = request.form.get('from')
+#     receiver = request.form.get('to')
+#     msg = request.form.get('msg')
     
-    try:
-        response = asyncio.run(send_sms(user, password, sender, receiver, msg))
-        return response, 200
-    except Exception as e:
-        return {'message': str(e), 'status': 'failed'}, 500
+#     try:
+#         response = asyncio.run(send_sms(user, password, sender, receiver, msg))
+#         return response, 200
+#     except Exception as e:
+#         return {'message': str(e), 'status': 'failed'}, 500
 
 
 
@@ -224,7 +233,7 @@ def twilio_response():
         number_exists = Numbers.check_if_number_exists(formatted_sender_number)
         user_language = Numbers.get_language_by_number(formatted_sender_number)
         if number_exists:
-            answer = qa_chain(appended_message, chat_history, formatted_recipient_number, user_language)
+            answer = gemini_qa_chain(appended_message, chat_history, formatted_recipient_number, user_language)
             send_twilio_message(to=sender_number, message=answer, from_=recipient_number)
         else:
             send_twilio_message(to=sender_number, message="Your number is not registered in our system, please register first to get responses.", from_=recipient_number)    
@@ -260,7 +269,7 @@ def twilio_sms_response():
         number_exists = Numbers.check_if_number_exists(sender_number)
         user_language = Numbers.get_language_by_number(sender_number)
         if number_exists:
-            answer = qa_chain(appended_message, chat_history, formatted_recipient_number, user_language)
+            answer = gemini_qa_chain(appended_message, chat_history, formatted_recipient_number, user_language)
             send_twilio_message(to=sender_number, message=answer, from_=recipient_number)
         else:
             send_twilio_message(to=sender_number, message="Your number is not registered in our system, please register first to get responses.", from_=recipient_number)    

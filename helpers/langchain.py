@@ -1,5 +1,6 @@
 from app.user.model import User
 from app.shortcodes.model import *
+from app.whatsapp_number.model import *
 from pinecone.grpc import PineconeGRPC as Pinecone
 from pinecone import ServerlessSpec
 import os
@@ -33,7 +34,8 @@ def get_or_create_index(organization_shortcode):
   if not pc.has_index(index_name):
       pc.create_index(
           name=index_name,
-          dimension=1536, 
+        #   dimension=1536, 
+          dimension=768, 
           metric="cosine", 
           spec=ServerlessSpec(
               cloud="aws", 
@@ -44,7 +46,7 @@ def get_or_create_index(organization_shortcode):
 
 
 
-def train_with_resource(resource_url, organization_shortcode):
+def train_openai_with_resource(resource_url, organization_shortcode):
     index_name = get_or_create_index(organization_shortcode)
 
     # Load the PDF
@@ -82,8 +84,17 @@ def delete_resource(resource_url, organization_shortcode):
     for text in texts:
         index.delete(filter={'text':{"$eq": text.page_content}})
 
-def qa_chain(question, history=[], shortcode="", language=""):
-    username = Shortcodes.get_username_by_shortcode(shortcode)
+def openai_qa_chain(question, history=[], shortcode="", language=""):
+    shortcode_obj = Shortcodes.get_user_by_shortcode(shortcode)
+    whatsapp_number_obj = Whatsapp_Number.get_user_by_number(shortcode)
+    if shortcode_obj:
+        username = shortcode_obj.username
+    elif whatsapp_number_obj:
+        username = whatsapp_number_obj.username
+    else: 
+        username='company'
+    get_or_create_index(shortcode)
+
     get_or_create_index(shortcode)
 
     # Determine the maximum response length based on the shortcode length
@@ -144,7 +155,7 @@ def qa_chain(question, history=[], shortcode="", language=""):
 
     return executor.run(input=q, chat_history=chat_history)
 
-def qa_chain_x(query, history=[], partner: User = User()):
+def openai_qa_chain_x(query, history=[], partner: User = User()):
     # Initialize a LangChain object for chatting with the LLM
     # without knowledge from Pinecone.
     llm = ChatOpenAI(
