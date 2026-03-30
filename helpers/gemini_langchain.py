@@ -1,6 +1,6 @@
 from app.shortcodes.model import *
 from app.whatsapp_number.model import *
-from pinecone.grpc import PineconeGRPC as Pinecone
+from pinecone import Pinecone
 import os
 
 from langchain_pinecone import PineconeVectorStore
@@ -14,7 +14,8 @@ from langchain.tools import Tool
 from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
-from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_huggingface import HuggingFaceEndpointEmbeddings
 
 from helpers.langchain import get_or_create_index
 
@@ -35,7 +36,10 @@ def train_gemini_with_resource(resource_url, organization_shortcode):
         documents = text_splitter.split_documents(data)
         texts = [doc.page_content for doc in documents]
 
-        embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+        embeddings = HuggingFaceEndpointEmbeddings(
+            model="sentence-transformers/all-mpnet-base-v2",
+            huggingfacehub_api_token=os.environ.get("HUGGINGFACE_API_TOKEN")
+        )
 
         PineconeVectorStore.from_texts(
             texts=texts,
@@ -47,20 +51,20 @@ def train_gemini_with_resource(resource_url, organization_shortcode):
         raise Exception(f"Vector Store Error: {str(e)}")
 
 
-def gemini_qa_chain(question, history=[], shortcode="", language=""):
+def gemini_qa_chain(question, history=[], shortcode="", language="", max_response_length=300):
     shortcode_obj = Shortcodes.get_user_by_shortcode(shortcode)
     whatsapp_number_obj = Whatsapp_Number.get_user_by_number(shortcode)
     if shortcode_obj:
-        username = shortcode_obj.username
+        username = shortcode_obj.company_name
     elif whatsapp_number_obj:
-        username = whatsapp_number_obj.username
+        username = whatsapp_number_obj.company_name
     else: 
         username='company'
     get_or_create_index(shortcode)
+    print(username)
 
     # Determine the maximum response length based on the shortcode length
     # max_response_length = 300 if len(shortcode) <= 5 else 3000
-    max_response_length = 300 #TODO: Fix for whatsapp messaging
 
     # Initialize a LangChain object for chatting with the LLM
     llm = ChatGoogleGenerativeAI(
@@ -70,7 +74,10 @@ def gemini_qa_chain(question, history=[], shortcode="", language=""):
     )
 
     # Initialize a LangChain embedding object.
-    embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+    embeddings = HuggingFaceEndpointEmbeddings(
+        model="sentence-transformers/all-mpnet-base-v2",
+        huggingfacehub_api_token=os.environ.get("HUGGINGFACE_API_TOKEN")
+    )
 
 
     docsearch = PineconeVectorStore.from_existing_index(index_name=shortcode, embedding=embeddings, namespace=shortcode)
@@ -85,26 +92,28 @@ def gemini_qa_chain(question, history=[], shortcode="", language=""):
 
     # Adjust the system message based on the maximum response length
     system_message = f"""
-            "You are the point of contact in charge of user queries for {username}"
-            "Make your responses as concise as possible and try your best to always answer according to the document."
-            "Make sure your responses are less than {max_response_length} characters maximum"
-            "Always make sure you respond in {language} language."
-            "If the user's query is not in {language} language, respond in the same language as the query."
-            """
+        You are a helpful assistant for {username}.
+        You MUST ALWAYS use the '{username} help desk agent' tool to answer ANY question. 
+        Never answer from your own knowledge. Always query the tool first.
+        Make your responses less than {max_response_length} characters.
+        Always respond in {language} language.
+        If the user's query is not in {language} language, respond in the same language as the query.
+    """
     tools = [
         Tool(
             name=f"{username} help desk agent",
             func=qa.run,
-            description=f"Useful when you need to answer {username} questions",
+            description=f"ALWAYS use this tool to answer ANY question from users. This tool has access to all {username} documents and knowledge base. Use it for every single question without exception.",
         )
     ]
     executor = initialize_agent(
         agent=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION,
         tools=tools,
         llm=llm,
-        # memory=chat_history,
         handle_parsing_errors="Check your output and make sure it conforms!",
         agent_kwargs={"system_message": system_message},
+        max_iterations=3,
+        early_stopping_method="generate",
         verbose=True,
     )
 

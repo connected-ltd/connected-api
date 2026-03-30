@@ -73,7 +73,8 @@ class Files(db.Model):
                 'created_at': file_obj.created_at,
                 'updated_at': file_obj.updated_at,
                 'shortcode': shortcode,
-                'whatsapp_number': whatsapp_number
+                'whatsapp_number': whatsapp_number,
+                'file_url': file_obj.file_url
             }
             data.append(file_dict)
         return data

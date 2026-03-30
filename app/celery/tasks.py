@@ -55,7 +55,7 @@ def train_with_resource_in_background(self, resource_url, filename, user_id, ind
         Files.create(
             name=filename, 
             user_id=user_id, 
-            url=resource_url,
+            file_url=resource_url,
             shortcode_id=shortcode_id, 
             whatsapp_number_id=whatsapp_number_id
         )

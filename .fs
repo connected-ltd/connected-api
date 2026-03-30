@@ -1418,6 +1418,22 @@
             "timestamp": "2025-05-28 20:59:33"
         },
         {
+            "name": "langchain-huggingface",
+            "version": "0.3.1",
+            "dependencies": [
+                {
+                    "name": "huggingface-hub"
+                },
+                {
+                    "name": "langchain-core"
+                },
+                {
+                    "name": "tokenizers"
+                }
+            ],
+            "timestamp": "2026-03-30 10:01:57"
+        },
+        {
             "name": "langchain-google-genai",
             "version": "2.1.12",
             "dependencies": [
@@ -1434,7 +1450,7 @@
                     "name": "pydantic"
                 }
             ],
-            "timestamp": "2026-03-29 11:50:03"
+            "timestamp": "2026-03-30 10:05:51"
         }
     ],
     "modules": [

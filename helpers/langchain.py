@@ -1,7 +1,7 @@
 from app.user.model import User
 from app.shortcodes.model import *
 from app.whatsapp_number.model import *
-from pinecone.grpc import PineconeGRPC as Pinecone
+from pinecone import Pinecone
 from pinecone import ServerlessSpec
 import os
 

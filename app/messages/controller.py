@@ -13,6 +13,7 @@ from app.shortcodes.model import *
 from app.files.model import *
 from app.credit.model import CreditPoints, CreditUsage, CreditTransaction
 from app.credit.schema import CreditUsageSchema
+from app.whatsapp_number.model import *
 from helpers.africastalking import AfricasTalking
 from helpers.twilio import send_twilio_message
 from helpers.gemini_langchain import gemini_qa_chain
@@ -116,12 +117,17 @@ def respond_to_message():
         
     try:
         # Get the user associated with the shortcode
-        shortcode_obj = Shortcodes.get_user_by_shortcode(shortcode)
-        if not shortcode_obj:
+        user_obj = Shortcodes.get_user_by_shortcode(shortcode)
+        if not user_obj:
             return {'message': 'Invalid shortcode', 'status': 'failed'}, 400
         
+        # Get the shortcode row
+        shortcode_row = Shortcodes.get_by_user_id(user_obj.id)
+        if not shortcode_row:
+            return {'message': 'Shortcode row not found', 'status': 'failed'}, 404
+
         # Check and deduct credits
-        credit_points = CreditPoints.get_by_user_id(shortcode_obj.id)
+        credit_points = CreditPoints.get_by_user_id(user_obj.id)
         if not credit_points:
             return {'message': 'No credit points found', 'status': 'failed'}, 404
             
@@ -132,11 +138,10 @@ def respond_to_message():
         
         if not success:
             return {'message': 'Insufficient credits', 'status': 'failed'}, 400
-            
 
         try:
             from app.files.model import Files
-            file_exists = Files.query.filter_by(shortcode_id=shortcode_obj.id, is_deleted=False).first()
+            file_exists = Files.query.filter_by(shortcode_id=shortcode_row.id, is_deleted=False).first()
 
             if not file_exists:
                 send_result = AfricasTalking().send(
@@ -144,15 +149,21 @@ def respond_to_message():
                     message="Sorry, no information has been uploaded for this shortcode yet. Please check back later.",
                     recipients=[sender_number]
                 )
-                return response, 200
+                if send_result["SMSMessageData"]["Recipients"][0]["status"] == 'Success':
+                    return response, 200
+                else:
+                    raise Exception("Failed to send message")
             
-            appended_message = f'{message}'
             number_exists = Numbers.check_if_number_exists(sender_number)
             user_language = Numbers.get_language_by_number(sender_number)
+
             if number_exists:
-                answer = gemini_qa_chain(appended_message, chat_history, shortcode, user_language)
-                send_result = AfricasTalking().send(sender=shortcode, message=answer, recipients=[sender_number])
-                
+                answer = gemini_qa_chain(message, chat_history, shortcode, user_language)
+                send_result = AfricasTalking().send(
+                    sender=shortcode, 
+                    message=answer, 
+                    recipients=[sender_number]
+                )
                 if send_result["SMSMessageData"]["Recipients"][0]["status"] == 'Success':
                     return response, 200
                 else:
@@ -169,50 +180,14 @@ def respond_to_message():
                     raise Exception("Failed to send message")
                     
         except Exception as e:
-            # Refund credits if message sending failed
+            # Only refund if message failed to send
             credit_points.refund_credits(RESPONSE_CREDIT_COST, usage.id)
             raise e
 
     except Exception as e:
-        # Refund credits if we caught an exception and have a transaction
         if 'usage' in locals() and 'credit_points' in locals():
             credit_points.refund_credits(RESPONSE_CREDIT_COST, usage.id)
         return {'message': str(e), 'status': 'failed'}, 500
-
-
-
-# @bp.post('/messages/hollatags_send')
-# def hollatags_send_message():
-#     user = os.environ.get("HOLLATAGS_USER")
-#     password = os.environ.get("HOLLATAGS_PASSWORD")
-#     sender = request.form.get('from')
-#     receiver = request.form.get('to')
-#     msg = request.form.get('msg')
-    
-#     try:
-#         response = asyncio.run(send_sms(user, password, sender, receiver, msg))
-#         return response, 200
-#     except Exception as e:
-#         return {'message': str(e), 'status': 'failed'}, 500
-
-
-# @bp.post('/messages/hollatags_query')
-# def hollatags_respond_to_query():
-#     user = os.environ.get("HOLLATAGS_USER")
-#     password = os.environ.get("HOLLATAGS_PASSWORD")
-#     sender = request.form.get('from')
-#     receiver = request.form.get('to')
-#     msg = request.form.get('msg')
-    
-#     try:
-#         response = asyncio.run(send_sms(user, password, sender, receiver, msg))
-#         return response, 200
-#     except Exception as e:
-#         return {'message': str(e), 'status': 'failed'}, 500
-
-
-
-
 
 
 @bp.post('/messages/twilio')
@@ -223,32 +198,59 @@ def twilio_response():
         sender_number = response.get('From')  
         recipient_number = response.get('To')
         message = response.get('Body')
- 
-        
-        appended_message = f'{message}'
         
         formatted_sender_number = sender_number.split(':')[1].strip()
         formatted_recipient_number = recipient_number.split('+')[1].strip()
-        
-        number_exists = Numbers.check_if_number_exists(formatted_sender_number)
-        user_language = Numbers.get_language_by_number(formatted_sender_number)
-        if number_exists:
-            answer = gemini_qa_chain(appended_message, chat_history, formatted_recipient_number, user_language)
-            send_twilio_message(to=sender_number, message=answer, from_=recipient_number)
-        else:
-            send_twilio_message(to=sender_number, message="Your number is not registered in our system, please register first to get responses.", from_=recipient_number)    
-        
-        
-        return response
 
-        # response_body = send_twilio_message(from_=recipient_number, to=sender_number)
+        # Get the user_id from the whatsapp number
+        user_id = Numbers.get_user_id_by_numbe(f'+{formatted_recipient_number}')
+        if not user_id:
+            return {'message': 'Invalid whatsapp number', 'status': 'failed'}, 400
+
+        # Check and deduct credits
+        credit_points = CreditPoints.get_by_user_id(user_id)
+        if not credit_points:
+            return {'message': 'No credit points found', 'status': 'failed'}, 404
+
+        success, usage = credit_points.deduct_credits(
+            amount=RESPONSE_CREDIT_COST,
+            service_type='whatsapp_response'
+        )
+
+        if not success:
+            return {'message': 'Insufficient credits', 'status': 'failed'}, 400
+
+        try:
+            number_exists = Numbers.check_if_number_exists(formatted_sender_number)
+            user_language = Numbers.get_language_by_number(formatted_sender_number)
+
+            if number_exists:
+                answer = gemini_qa_chain(message, chat_history, formatted_recipient_number, user_language, max_response_length=1500)
+                send_twilio_message(to=sender_number, message=answer, from_=recipient_number)
+            else:
+                send_twilio_message(
+                    to=sender_number, 
+                    message="Your number is not registered in our system, please register first to get responses.", 
+                    from_=recipient_number
+                )
+
+            return response
+
+        except Exception as e:
+            credit_points.refund_credits(RESPONSE_CREDIT_COST, usage.id)
+            raise e
+
+    except Exception as e:
+        if 'usage' in locals() and 'credit_points' in locals():
+            credit_points.refund_credits(RESPONSE_CREDIT_COST, usage.id)
+        return {'message': str(e), 'status': 'failed'}, 500
 
 
-        # return {"message": "Message sent successfully", "response_body": response_body}, 200
     except Exception as e:
         print(f"Error: {e}")
         return {"message": f"Failed to send message: {str(e)}"}, 500
     
+
     
 @bp.post('/messages/twilio/sms')
 def twilio_sms_response():
@@ -258,33 +260,51 @@ def twilio_sms_response():
         sender_number = response.get('From')  
         recipient_number = response.get('To')
         message = response.get('Body')
-        print()
- 
         
-        appended_message = f'{message}'
-        
-        # formatted_sender_number = sender_number.split(':')[1].strip()
         formatted_recipient_number = recipient_number.split('+')[1].strip()
-        
-        number_exists = Numbers.check_if_number_exists(sender_number)
-        user_language = Numbers.get_language_by_number(sender_number)
-        if number_exists:
-            answer = gemini_qa_chain(appended_message, chat_history, formatted_recipient_number, user_language)
-            send_twilio_message(to=sender_number, message=answer, from_=recipient_number)
-        else:
-            send_twilio_message(to=sender_number, message="Your number is not registered in our system, please register first to get responses.", from_=recipient_number)    
-        
-        
-        return message
 
-        # response_body = send_twilio_message(from_=recipient_number, to=sender_number)
+        # Get the user_id from the whatsapp number
+        user_id = Whatsapp_Number.get_user_id_by_number(f'+{formatted_recipient_number}')
+        if not user_id:
+            return {'message': 'Invalid number', 'status': 'failed'}, 400
 
+        # Check and deduct credits
+        credit_points = CreditPoints.get_by_user_id(user_id)
+        if not credit_points:
+            return {'message': 'No credit points found', 'status': 'failed'}, 404
 
-        # return {"message": "Message sent successfully", "response_body": response_body}, 200
+        success, usage = credit_points.deduct_credits(
+            amount=RESPONSE_CREDIT_COST,
+            service_type='sms_response'
+        )
+
+        if not success:
+            return {'message': 'Insufficient credits', 'status': 'failed'}, 400
+
+        try:
+            number_exists = Numbers.check_if_number_exists(sender_number)
+            user_language = Numbers.get_language_by_number(sender_number)
+
+            if number_exists:
+                answer = gemini_qa_chain(message, chat_history, formatted_recipient_number, user_language)
+                send_twilio_message(to=sender_number, message=answer, from_=recipient_number)
+            else:
+                send_twilio_message(
+                    to=sender_number, 
+                    message="Your number is not registered in our system, please register first to get responses.", 
+                    from_=recipient_number
+                )
+
+            return response
+
+        except Exception as e:
+            credit_points.refund_credits(RESPONSE_CREDIT_COST, usage.id)
+            raise e
+
     except Exception as e:
-        print(f"Error: {e}")
-        return {"message": f"Failed to send message: {str(e)}"}, 500
-    
+        if 'usage' in locals() and 'credit_points' in locals():
+            credit_points.refund_credits(RESPONSE_CREDIT_COST, usage.id)
+        return {'message': str(e), 'status': 'failed'}, 500
     
 
 @bp.get('/messages/<int:id>')
