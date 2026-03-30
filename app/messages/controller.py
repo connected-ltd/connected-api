@@ -203,7 +203,7 @@ def twilio_response():
         formatted_recipient_number = recipient_number.split('+')[1].strip()
 
         # Get the user_id from the whatsapp number
-        user_id = Numbers.get_user_id_by_numbe(f'+{formatted_recipient_number}')
+        user_id = Whatsapp_Number.get_user_id_by_number(f'+{formatted_recipient_number}')
         if not user_id:
             return {'message': 'Invalid whatsapp number', 'status': 'failed'}, 400
 
